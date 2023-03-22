@@ -70,14 +70,14 @@ export default function Header() {
       </div>
     </div>
     <header className="flex justify-between items-center px-0 max-w-6xl mx-auto">
-        < div className='flex items-center text-left hover:scale-105'
+    < div className='flex items-center text-left hover:scale-105'
          onClick={()=>navigate("/")} >
          {/* <img src="https://static.rdc.moveaws.com/images/logos/rdc-logo-default.svg" alt="logo" 
             className="h-5 cursor-pointer"
             onClick={()=>navigate("/")}
             /> */}
             <BsFillHouseFill className='ml-1 text-red-500  w-6 h-5'/>
-             <h2 className='font-semibold text-lg cursor-pointer'>
+             <h2 className='hidden sm:block font-semibold text-lg cursor-pointer'>
              VacationsRentalsCR
           </h2>
         </div>
