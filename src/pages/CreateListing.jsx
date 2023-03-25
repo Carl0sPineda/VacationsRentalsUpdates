@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useEffect } from 'react';
 import { toast } from 'react-toastify'
 import {getStorage, ref,uploadBytesResumable,getDownloadURL} from "firebase/storage";
 import Spinner from '../components/Spinner'
@@ -7,12 +8,14 @@ import {v4 as uuidv4} from 'uuid'
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase";
 import {useNavigate } from 'react-router-dom';
+import React, { Component } from 'react';
 
 export default function CreateListing() {
     const navigate = useNavigate()
     const auth = getAuth()
     const [geolocationEnabled, setLocationEnabled] = useState(true)
     const [loading, setLoading] = useState(false)
+    const [selectedImage,setSelectedImage]=useState([])
     const [formData,setFormData] = useState({
         type:'rent',
         name:'',
@@ -31,7 +34,7 @@ export default function CreateListing() {
     })
 
     const {type,name,bedrooms,bathroms,parking,furnished,address,description,offer,regularPrice,discountedPrice,latitude,longitude,images} = formData
-
+ 
     function onChange(e) {
         let boolean = null
 
@@ -43,10 +46,14 @@ export default function CreateListing() {
         }
         //files
         if (e.target.files) {
+            setSelectedImage(e.target.files); //Used for preview the image before upload files[0]
+
             setFormData((prevState)=>({
                 ...prevState,
-                images: e.target.files
+                images: e.target.files,
+                
             })  )  
+
         }
         //text/Boolean/Number
         if (!e.target.files) {
@@ -55,10 +62,29 @@ export default function CreateListing() {
                 [e.target.id]: boolean ?? e.target.value
             })  )  
         }
+
+        
     }
+
+    function uploadMultipleFiles(e) {
+        fileObj.push(setSelectedImage(e.target.files[0]))
+        for (let i = 0; i < fileObj[0].length; i++) {
+            fileArray.push(URL.createObjectURL(fileObj[0][i]))
+        }
+    }
+
+   
+  
+    // This function will be triggered when the "Remove This Image" button is clicked
+    const removeSelectedImage = () => {
+        setSelectedImage();
+    };
+
+    
 
     async function onSubmit(e) {
         e.preventDefault()
+       // alert(URL.createObjectURL(selectedImage))//new
         setLoading(true)
         if(+discountedPrice >= +regularPrice){
             setLoading(false)
@@ -152,6 +178,7 @@ export default function CreateListing() {
           !formDataCopy.offer && delete formDataCopy.discountedPrice
           delete formDataCopy.latitude
           delete formDataCopy.longitude
+          console.log(formDataCopy);
           const docRef = await addDoc(collection(db,'listings'),formDataCopy)
           setLoading(false)
           toast.success('Listing created')
@@ -373,10 +400,12 @@ export default function CreateListing() {
                   </div>
               </div>
             )}
+
+            
             <div className='mb-6'>
-                <p className='text-lg font-semibold'>images</p>
+                <p className='text-lg font-semibold'>Images</p>
                 <p className='text-gray-600'>The firs image will be the cover (max 6)</p>
-                <input type="file" id='images' onChange={onChange} 
+                <input type="file" id='images' onChange={onChange}
                 accept='.jpg,.png,.jpeg'
                 multiple
                 required
@@ -385,12 +414,26 @@ export default function CreateListing() {
                 transition duration-150 ease-in-out
                 focus:bg-white focus:border-slate-600'/>
             </div>
-            <button type='submit' className='mb-6 w-full px-7
+
+        
+            <div  className="form-group multi-preview md:w-[100%] lg:w-[94%]  mb-12 md:mb-6" style={{ display: 'flex', flexWrap: 'nowrap' }}>
+                  <ul className="has-scrollbar">
+                {selectedImage &&
+                    Array.from(selectedImage).map((image, index) => (
+          
+                    <img className='rounded-2xl'key={index} src={URL.createObjectURL(image)} alt={`Image ${index}`} style={{ maxWidth: '100%', height: '220px', marginRight: '10px' }} />
+                    ))
+                }
+                </ul>
+                
+            </div>
+
+            <button type='submit' className='mb-4 w-full px-4
             py-3 bg-blue-600 text-white font-medium text-sm
             uppercase rounded shadow-md hover:bg-blue-700
             hover:shadow-lg focus:bg-blue-700 focus:shadow-lg
             active:bg-blue-800 active:shadow-lg transition
-            duration-150 ease-in-out'>Create Listing</button>
+            duration-150 ease-in-out text-center'>Create Listing</button>
         </form>
     </main>
   )
