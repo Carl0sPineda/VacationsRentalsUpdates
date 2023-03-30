@@ -9,8 +9,8 @@ import {
   orderBy,
   query
 } from "firebase/firestore";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+// import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import { db } from "../firebase";
@@ -168,7 +168,7 @@ export default function Listing() {
           <ul className="flex items-center space-x-2 sm:space-x-10 text-sm font-semibold mb-6">
             <li className="flex items-center whitespace-nowrap">
               <FaBed className="text-lg mr-1" />
-              {+listing.bedrooms > 1 ? `${listing.bedrooms} Camas` : "1 Cama"}
+              {+listing.bedrooms > 1 ? `${listing.bedrooms} Habitaciones` : "1 Habitación"}
             </li>
             <li className="flex items-center whitespace-nowrap">
               <FaBath className="text-lg mr-1" />
@@ -187,7 +187,7 @@ export default function Listing() {
             <div className="mt-6">
               <button
                 onClick={() => setContactLandlord(true)}
-                className="px-7 py-3 bg-blue-600 text-white font-medium text-sm uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg w-full text-center transition duration-150 ease-in-out "
+                className="px-7 py-3 bg-slate-900 text-white font-medium text-sm uppercase rounded shadow-md hover:bg-slate-700 hover:shadow-lg focus:bg-slate-700 focus:shadow-lg w-full text-center transition duration-150 ease-in-out "
               >
                 Contacto
               </button>
