@@ -24,18 +24,19 @@ import SwiperCore, {
 import { v4 as uuidv4 } from 'uuid'
 import "swiper/css/bundle";
 import {
-  FaShare,
+  // FaShare,
   FaMapMarkerAlt,
   FaBed,
   FaBath,
-  FaParking,
-  FaChair,
+  // FaParking,
+  // FaChair,
   FaUserCircle
 } from "react-icons/fa";
 import { getAuth } from "firebase/auth";
 import Contact from "../components/Contact";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { toast } from "react-toastify";
+import "leaflet/dist/leaflet.css";
 
 export default function Listing() {
   const auth = getAuth();
@@ -45,7 +46,7 @@ export default function Listing() {
   const [loading, setLoading] = useState(true);
   const [comment, setComment] = useState("")
   const [comments, setComments] = useState([])
-  const [shareLinkCopied, setShareLinkCopied] = useState(false);
+  // const [shareLinkCopied, setShareLinkCopied] = useState(false);
   const [contactLandlord, setContactLandlord] = useState(false);
   SwiperCore.use([Autoplay, Navigation, Pagination]);
 
@@ -86,7 +87,7 @@ export default function Listing() {
         timestamp: serverTimestamp(),
       });
     } catch (error) {
-      toast.error("You need login in the webside for give a review")
+      toast.error("Inicia sesión para realizar un comentario")
     }
     console.log(params.listingId)
   }
@@ -98,7 +99,7 @@ export default function Listing() {
   return (
     <main>
 
-      <div
+      {/* <div
         className="fixed top-[13%] right-[3%] z-10 bg-white cursor-pointer border-2 border-gray-400 rounded-full w-12 h-12 flex justify-center items-center"
         onClick={() => {
           navigator.clipboard.writeText(window.location.href);
@@ -114,7 +115,7 @@ export default function Listing() {
         <p className="fixed top-[23%] right-[5%] font-semibold border-2 border-gray-400 rounded-md bg-white z-10 p-2">
           Link Copied
         </p>
-      )}
+      )} */}
       <div className="m-4 flex flex-col md:flex-row max-w-6xl lg:mx-auto p-4 rounded-lg shadow-lg bg-white lg:space-x-5">
 
         <div className="w-full  overflow-x-hidden mt-6 md:mt-0 md:ml-2">
@@ -140,16 +141,11 @@ export default function Listing() {
             ))}
 
           </Swiper>
-          <p className="text-2xl font-bold mb-3 text-blue-900">
-            {listing.name} - ${" "}
-            {listing.offer
-              ? listing.discountedPrice
-                .toString()
-                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-              : listing.regularPrice
-                .toString()
-                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-            {listing.type === "rent" ? " / month" : ""}
+          <p className="text-2xl font-bold mt-2 mb-3 text-slate-900">
+            Tarifa ${listing.regularPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+            {/* Tarifa temporada alta ${listing.highPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}<br />
+            Tarifa temporada premiun ${listing.premiunPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} */}
+            {listing.type === "rent" ? " / noche" : ""}
           </p>
           <p className="flex items-center mt-6 mb-3 font-semibold">
             <FaMapMarkerAlt className="text-green-700 mr-1" />
@@ -158,34 +154,34 @@ export default function Listing() {
           <div className="flex justify-start items-center space-x-4 w-[75%]">
             <p className='bg-red-800 w-full max-w-[200px]
               rounded-md p-1 text-white text-center 
-              font-semibold shadow-md'> {listing.type === "rent" ? "Rent" : "Sale"} </p>
-            {listing.offer && (
+              font-semibold shadow-md'> {listing.type === "rent" ? "Se renta" : "Sale"} </p>
+            {/* {listing.offer && (
               <p className="w-full max-w-[200px] bg-green-800 rounded-md p-1 text-white text-center font-semibold shadow-md">
                 ${+listing.regularPrice - +listing.discountedPrice} discount
               </p>
-            )}
+            )} */}
           </div>
           <p className="mt-3 mb-3">
-            <span className="font-semibold">Description - </span>
+            <span className="font-semibold">Descripción:</span>
             {listing.description}
           </p>
           <ul className="flex items-center space-x-2 sm:space-x-10 text-sm font-semibold mb-6">
             <li className="flex items-center whitespace-nowrap">
               <FaBed className="text-lg mr-1" />
-              {+listing.bedrooms > 1 ? `${listing.bedrooms} Beds` : "1 Bed"}
+              {+listing.bedrooms > 1 ? `${listing.bedrooms} Camas` : "1 Cama"}
             </li>
             <li className="flex items-center whitespace-nowrap">
               <FaBath className="text-lg mr-1" />
-              {+listing.bathrooms > 1 ? `${listing.bathrooms} Baths` : "1 Bath"}
+              {+listing.bathroms > 1 ? `${listing.bathroms} Baños` : "1 Baño"}
             </li>
-            <li className="flex items-center whitespace-nowrap">
+            {/* <li className="flex items-center whitespace-nowrap">
               <FaParking className="text-lg mr-1" />
               {listing.parking ? "Parking spot" : "No parking"}
             </li>
             <li className="flex items-center whitespace-nowrap">
               <FaChair className="text-lg mr-1" />
               {listing.furnished ? "Furnished" : "Not furnished"}
-            </li>
+            </li> */}
           </ul>
           {listing.userRef !== auth.currentUser?.uid && !contactLandlord && (
             <div className="mt-6">
@@ -215,7 +211,7 @@ export default function Listing() {
               disabled={!comment.trim()}
               className="text-blue-400 font-bold disabled:text-blue-200"
             >
-              Reviews
+              Enviar
             </button>
           </form>
 
@@ -238,7 +234,7 @@ export default function Listing() {
         <div className="w-full h-[200px] md:h-[600px] z-10 overflow-x-hidden mt-6 md:mt-0 md:ml-2">
           <MapContainer
             center={[listing.geolocation.lat, listing.geolocation.lng]}
-            zoom={13}
+            zoom={10}
             scrollWheelZoom={false}
             style={{ height: '100%', width: '100%' }}
             attributionControl={false}>
