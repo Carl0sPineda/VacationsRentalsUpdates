@@ -397,7 +397,7 @@ export default function CreateListing() {
           )
         }
 
-        <button type='submit' className='mx-auto block mb-4 w-[400px] px-4 mt-4
+        <button type='submit' className='mx-auto block mb-4 w-[300px] px-4 mt-4
             py-3 bg-slate-600 text-white font-bold text-sm
             uppercase rounded shadow-md hover:bg-slate-700
             hover:shadow-lg focus:bg-slate-700 focus:shadow-lg
