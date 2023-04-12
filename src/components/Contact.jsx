@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Swal from 'sweetalert2';
 import { db } from "../firebase";
 
 export default function Contact({ userRef, listing }) {
@@ -12,6 +13,7 @@ export default function Contact({ userRef, listing }) {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [persons, setPersons] = useState("");
+  const [isFormComplete, setIsFormComplete] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const currentURL = window.location.href
@@ -28,6 +30,36 @@ export default function Contact({ userRef, listing }) {
     }
     getLandlord();
   }, [userRef]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (name && email && phone && persons && startDate && endDate) {
+      const mailtoLink = `mailto:${landlord.email}?Subject=${listing.name}&body=Solicitud de reserva%0A%0ANombre:%20${name}%0AEmail: ${email}%0ATelefono: ${phone}%0ACantidad de personas:%20${persons}%0AFecha inicio: %20${startDate.toLocaleDateString("en-US")}%0AFecha fin: %20${endDate.toLocaleDateString("en-US")}%0A%0APropiedad solicitada:%20${currentURL}`;
+      // Redirige al usuario al cliente de correo electrónico predeterminado
+      window.location.href = mailtoLink;
+    } else {
+      Swal.fire({
+        title: 'Información',
+        text: 'Por favor completa todos los campos antes de enviar el formulario.',
+        icon: 'info',
+        width: "400px",
+
+      });
+
+    }
+  }
+
+
+
+  // useEffect(() => {
+  //   if (name && email && phone && persons && startDate && endDate) {
+  //     setIsFormComplete(true);
+  //     alert('Por favor complete todos los campos antes de enviar el formulario.')
+  //   } else {
+  //     setIsFormComplete(false);
+  //     // alert('Por favor complete todos los campos antes de enviar el formulario.')
+  //   }
+  // }, [name, email, phone, persons, startDate, endDate]);
 
   return (
     <>
@@ -113,12 +145,11 @@ export default function Contact({ userRef, listing }) {
               className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-700 focus:bg-white focus:border-slate-600"
             />
           </div>
-          <a href={`mailto:${landlord.email}?Subject=${listing.name}&body=Solicitud de reserva:%0A%0ANombre:%20${name}%0AEmail: ${email}%0ATelefono: ${phone}%0ACantidad de personas:%20${persons}%0AFecha inicio: %20${startDate.toLocaleDateString("en-US")}%0AFecha fin: %20${endDate.toLocaleDateString("en-US")}%0A%0APropiedad solicitada:%20${currentURL}`} >
 
-            <button className="px-7 py-3 bg-slate-600 text-white rounded text-sm uppercase shadow-md hover:bg-slate-700 hover:shadow-lg focus:bg-slate-700 focus:shadow-lg active:bg-slate-800 active:shadow-lg transition duration-150 ease-in-out w-full text-center mb-6" type="button">
-              Enviar
-            </button>
-          </a>
+          <button onClick={handleSubmit} className="px-7 py-3 bg-slate-600 text-white rounded text-sm uppercase shadow-md hover:bg-slate-700 hover:shadow-lg focus:bg-slate-700 focus:shadow-lg active:bg-slate-800 active:shadow-lg transition duration-150 ease-in-out w-full text-center mb-6" type="button">
+            Enviar
+          </button>
+
         </div>
       )}
     </>
