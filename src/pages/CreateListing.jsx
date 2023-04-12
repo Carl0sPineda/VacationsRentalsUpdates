@@ -1,440 +1,411 @@
-import { useState } from 'react'
-import { useEffect } from 'react';
+// npm i leaflet-control-geocoder 
+// npm i leaflet-fullscreen
+// import "leaflet/dist/leaflet.css"; importar en listing tambien
+// borrar las importaciones de leaflet en el index.html
+
+import { useState, useEffect } from 'react'
 import { toast } from 'react-toastify'
-import {getStorage, ref,uploadBytesResumable,getDownloadURL} from "firebase/storage";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import Spinner from '../components/Spinner'
 import { getAuth } from 'firebase/auth';
-import {v4 as uuidv4} from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase";
-import {useNavigate } from 'react-router-dom';
-import React, { Component } from 'react';
+import { useNavigate } from 'react-router-dom';
+import L from "leaflet";
+import "leaflet-fullscreen/dist/leaflet.fullscreen.css"; 
+import "leaflet/dist/leaflet.css";
+import "leaflet-control-geocoder/dist/Control.Geocoder.css";
+import "leaflet-control-geocoder";
+import 'leaflet-fullscreen';
 
 export default function CreateListing() {
-    const navigate = useNavigate()
-    const auth = getAuth()
-    const [geolocationEnabled, setLocationEnabled] = useState(true)
-    const [loading, setLoading] = useState(false)
-    const [selectedImage,setSelectedImage]=useState([])
-    const [formData,setFormData] = useState({
-        type:'rent',
-        name:'',
-        bedrooms:1,
-        bathroms:1,
-        parking:false,
-        furnished:false,
-        address:'',
-        description:'',
-        offer:false,
-        regularPrice:0,
-        discountedPrice:0,
-        latitude: 0,
-        longitude: 0,
-        images: {}
-    })
+  const navigate = useNavigate()
+  const auth = getAuth()
+  // const [geolocationEnabled, setLocationEnabled] = useState(true)
+  const [geolocation, setGeolocation] = useState({ lat: 10.36402678444531, lng: -85.3908877959475 });
+  // const [address, setAddress] = useState("");
+  const [loading, setLoading] = useState(false)
+  const [selectedImage, setSelectedImage] = useState([])
+  const [progress, setProgress] = useState(0)
+  const [formData, setFormData] = useState({
+    type: 'rent',
+    name: '',
+    bedrooms: 1,
+    bathroms: 1,
+    parking: false,
+    furnished: false,
+    address: '',
+    description: '',
+    offer: false,
+    regularPrice: 0,
+    highPrice: 0,
+    premiunPrice: 0,
+    discountedPrice: 0,
+    latitude: 0,
+    longitude: 0,
+    images: {}
+  })
 
-    const {type,name,bedrooms,bathroms,parking,furnished,address,description,offer,regularPrice,discountedPrice,latitude,longitude,images} = formData
- 
-    function onChange(e) {
-        let boolean = null
+  const { type, name, bedrooms, bathroms, parking, furnished, address, description, offer, regularPrice, highPrice, premiunPrice, discountedPrice, latitude, longitude, images } = formData
 
-        if (e.target.value === 'true') {
-            boolean = true    
-        }
-        if (e.target.value === 'false') {
-            boolean = false    
-        }
-        //files
-        if (e.target.files) {
-            setSelectedImage(e.target.files); //Used for preview the image before upload files[0]
+  useEffect(() => {
+    const map = L.map("mapid").setView([geolocation.lat, geolocation.lng], 10);
 
-            setFormData((prevState)=>({
-                ...prevState,
-                images: e.target.files,
-                
-            })  )  
+    const osmLayer = L.tileLayer(
+      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      {
+        attribution: "OpenStreetMap contributors",
+      }
+    );
 
-        }
-        //text/Boolean/Number
-        if (!e.target.files) {
-            setFormData((prevState)=>({
-                ...prevState,
-                [e.target.id]: boolean ?? e.target.value
-            })  )  
-        }
+    const esriLayer = L.tileLayer(
+      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      {
+        attribution: "Esri",
+      }
+    );
 
-        
-    }
+    osmLayer.addTo(map);
 
-    function uploadMultipleFiles(e) {
-        fileObj.push(setSelectedImage(e.target.files[0]))
-        for (let i = 0; i < fileObj[0].length; i++) {
-            fileArray.push(URL.createObjectURL(fileObj[0][i]))
-        }
-    }
-
-   
-  
-    // This function will be triggered when the "Remove This Image" button is clicked
-    const removeSelectedImage = () => {
-        setSelectedImage();
+    const baseLayers = {
+      "Por defecto": osmLayer,
+      Satelite: esriLayer,
+      // Dark: darkLayer,
+      // OpenTopoMap: layer2,
+      // "Thunderforest Cycle": layer3,
+      // "Esri Street Map": layer4,
     };
 
-    
+    const marker = L.marker([geolocation.lat, geolocation.lng], {
+      draggable: true,
+    }).addTo(map);
 
-    async function onSubmit(e) {
-        e.preventDefault()
-       // alert(URL.createObjectURL(selectedImage))//new
-        setLoading(true)
-        if(+discountedPrice >= +regularPrice){
-            setLoading(false)
-            toast.error('Discounted price needs to be less than regular price')
-            return 
-        }
-        if (images.length > 6) {
-            setLoading(false)
-            toast.error('Maximun 6 images are allowed')
-            return
-        }
+    marker.on("dragend", async function (e) {
+      const { lat, lng } = e.target.getLatLng();
+      setGeolocation({ lat, lng });
 
-        let geolocation = {};
-        let location;
-        
-        if (geolocationEnabled) {
-          const response = await fetch(
-            `https://nominatim.openstreetmap.org/search?format=json&q=${address}`
-          );
-          
-          const data = await response.json();
-          console.log(data);
-          geolocation.lat = data[0]?.lat ?? 0;
-          geolocation.lng = data[0]?.lon ?? 0;
-        
-          location = data.length === 0 && undefined;
-        
-          if (location === undefined) {
-            setLoading(false);
-            toast.error("please enter a correct address");
-            return;
-          }
-        } else {
-          geolocation.lat = latitude;
-          geolocation.lng = longitude;
-        }
+      setFormData((prevState) => ({
+        ...prevState,
+        latitude: lat,
+        longitude: lng
+      }));
 
-        async function storeImage(image){
-            return new Promise((resolve,reject)=>{
-                const storage = getStorage()
-                const filename = `${auth.currentUser.uid}-${image.name}-${uuidv4()}`
-                const storageRef = ref(storage, filename)
-                const uploadTask = uploadBytesResumable(storageRef, image)
-                uploadTask.on('state_changed',
-                 
-  (snapshot) => {
-    // Observe state change events such as progress, pause, and resume
-    // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-    console.log('Upload is ' + progress + '% done');
-    switch (snapshot.state) {
-      case 'paused':
-        console.log('Upload is paused');
-        break;
-      case 'running':
-        console.log('Upload is running');
-        break;
-    }
-  }, 
-  (error) => {
-    // Handle unsuccessful uploads
-    reject(error)
-  }, 
-  () => {
-    // Handle successful uploads on complete
-    // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-      resolve(downloadURL);
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`
+      );
+
+      const data = await response.json();
+      const address = data?.display_name ?? "";
+      //   setAddress(address);
     });
+
+    const geocoder = L.Control.geocoder({
+      defaultMarkGeocode: false,
+    }).on("markgeocode", function (e) {
+      const { center } = e.geocode;
+      marker.setLatLng(center);
+      map.setView(center, 16);
+    }).addTo(map);
+
+    // L.control
+    //   .zoom({
+    //     position: "topright",
+    //   })
+    //   .addTo(map);
+
+    L.control
+      .scale({
+        position: "bottomright",
+      })
+      .addTo(map);
+
+    L.control.fullscreen({
+       position: "topleft",
+     }).addTo(map);
+
+    L.control.layers(baseLayers).addTo(map);
+
+    // Clean up function to remove the map and marker when the component unmounts
+    return () => {
+      map.remove();
+    };
+  }, []); // Empty array to run the effect only once
+
+
+  function onChange(e) {
+    let boolean = null
+
+    if (e.target.value === 'true') {
+      boolean = true
+    }
+    if (e.target.value === 'false') {
+      boolean = false
+    }
+    //files
+    if (e.target.files) {
+      setSelectedImage(e.target.files); //Used for preview the image before upload files[0]
+
+      setFormData((prevState) => ({
+        ...prevState,
+        images: e.target.files,
+      }))
+
+    }
+    //text/Boolean/Number
+    if (!e.target.files) {
+      setFormData((prevState) => ({
+        ...prevState,
+        [e.target.id]: boolean ?? e.target.value
+      }))
+    }
   }
-);
-            })
-        }
 
-        const imgUrls = await Promise.all(
-            [...images].map((image) => storeImage(image))
-          ).catch((error) => {
-            setLoading(false);
-            toast.error("Images not uploaded");
-            return;
-          });
+  function uploadMultipleFiles(e) {
+    fileObj.push(setSelectedImage(e.target.files[0]))
+    for (let i = 0; i < fileObj[0].length; i++) {
+      fileArray.push(URL.createObjectURL(fileObj[0][i]))
+    }
+  }
 
-          const formDataCopy = {
-            ...formData,
-            imgUrls,
-            geolocation,
-            timestamp: serverTimestamp(),
-            userRef: auth.currentUser.uid
+  // This function will be triggered when the "Remove This Image" button is clicked
+  const removeSelectedImage = () => {
+    setSelectedImage();
+  };
+
+  async function onSubmit(e) {
+    e.preventDefault()
+    // alert(URL.createObjectURL(selectedImage))//new
+    setLoading(true)
+
+    if (images.length > 6) {
+      setLoading(false)
+      toast.error('Maximun 6 images are allowed')
+      return
+    }
+
+    async function storeImage(image) {
+      return new Promise((resolve, reject) => {
+        const storage = getStorage()
+        const filename = `${auth.currentUser.uid}-${image.name}-${uuidv4()}`
+        const storageRef = ref(storage, filename)
+        const uploadTask = uploadBytesResumable(storageRef, image)
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const progress = Math.floor((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+            // console.log("Upload is " + progress + "% done");
+            setProgress(progress);
+          },
+          (error) => {
+            // Handle unsuccessful uploads
+            reject(error);
+          },
+          () => {
+            // Handle successful uploads on complete
+            // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              resolve(downloadURL);
+            });
           }
-          delete formDataCopy.images
-          !formDataCopy.offer && delete formDataCopy.discountedPrice
-          delete formDataCopy.latitude
-          delete formDataCopy.longitude
-          console.log(formDataCopy);
-          const docRef = await addDoc(collection(db,'listings'),formDataCopy)
-          setLoading(false)
-          toast.success('Listing created')
-          navigate(`/category/${formDataCopy.type}/${docRef.id}`)
+        );
+      })
     }
 
-    if (loading) {
-        return <Spinner/>
+    const imgUrls = await Promise.all(
+      [...images].map((image) => storeImage(image))
+    ).catch((error) => {
+      setLoading(false);
+      toast.error("Images not uploaded");
+      return;
+    });
+
+    const formDataCopy = {
+      ...formData,
+      imgUrls,
+      geolocation,
+      timestamp: serverTimestamp(),
+      userRef: auth.currentUser.uid
     }
-    
+    delete formDataCopy.images
+    !formDataCopy.offer && delete formDataCopy.discountedPrice
+    delete formDataCopy.latitude
+    delete formDataCopy.longitude
+    console.log(formDataCopy);
+    const docRef = await addDoc(collection(db, 'listings'), formDataCopy)
+    setLoading(false)
+    toast.success('Propiedad agregada!')
+    navigate(`/category/${formDataCopy.type}/${docRef.id}`)
+  }
+
+  // if (loading) {
+  //   return <Spinner />
+  // }
+
   return (
-    <main className='max-w-md px-2 mx-auto'>
-        <h1 className='text-3xl text-center mt-6
-        font-bold'>Create Listing</h1>
-        <form onSubmit={onSubmit}>
-            <p className='text-lg mt-6 font-semibold'>Sell / Rent</p>
-            <div className='flex'> 
-                <button type='button' id='type' value='sale'
-                onClick={onChange} className={`mr-3 px-7 py-3 
-                font-medium text-sm uppercase shadow-md rounded
-                hover:shadow-lg focus:shadow-lg active:shadow-lg
-                transition duration-150 ease-in-out w-full ${
-                    type === 'rent' ? 'bg-white text-black':
-                    'bg-slate-600 text-white'
-                }`}>
-                    sell
-                </button>
-                <button type='button' id='type' value='rent'
-                onClick={onChange} className={`ml-3 px-7 py-3 
-                font-medium text-sm uppercase shadow-md rounded
-                hover:shadow-lg focus:shadow-lg active:shadow-lg
-                transition duration-150 ease-in-out w-full ${
-                    type === 'sale' ? 'bg-white text-black':
-                    'bg-slate-600 text-white'
-                }`}>
-                    rent
-                </button>
-            </div>
-            <p className='text-lg mt-6 font-semibold'> Name</p>
-            <input type="text" id='name' value={name} onChange={onChange}
-            placeholder='Name' maxLength='32' minLength='10' required 
-            className='w-full px-4 py-2 text-xl text-gray-700
+    <main className='max-w-md px-2 mx-auto sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-4xl'>
+      <h1 className='text-3xl text-center mt-6
+        font-bold'>Formulario agregar propiedades</h1>
+      <form onSubmit={onSubmit}>
+        <p className='text-lg mt-6 font-semibold'>Dirección</p>
+        <input type="text" id='address' value={address} onChange={onChange}
+          placeholder='Ejm: Liberia, Guanacaste' maxLength='32' minLength='5' required
+          className='w-full px-4 py-2 text-xl text-gray-700
             bg-white border border-gray-300 rounded transition
             duration-150 ease-in-out focus:text-gray-700 
             focus:bg-white focus:border-slate-600 mb-6'/>
 
-            <div className='flex space-x-6 mb-6'>
-                <div>
-                    <p className='text-lg font-semibold'>Beds</p>
-                    <input type="number" id='bedrooms' value={bedrooms}
-                    onChange={onChange} min='1' max='50' required
-                    className='w-full px-4 py-2 text-xl text-gray-700
+        <div className='flex space-x-6 mb-6'>
+          <div>
+            <p className='text-lg font-semibold'>Camas</p>
+            <input type="number" id='bedrooms' value={bedrooms}
+              onChange={onChange} min='1' max='50' required
+              className='w-full px-4 py-2 text-xl text-gray-700
                     bg-white border border-gray-300 rounded 
                     transition duration-150 ease-in-out
                     focus:text-gray-700 focus:bg-white 
-                    focus:border-slate-600 text-center'/>               
-                </div>
-                <div>
-                    <p className='text-lg font-semibold'>Baths</p>
-                    <input type="number" id='bathroms' value={bathroms}
-                    onChange={onChange} min='1' max='50' required
-                    className='w-full px-4 py-2 text-xl text-gray-700
+                    focus:border-slate-600 text-center'/>
+          </div>
+          <div>
+            <p className='text-lg font-semibold'>Baños</p>
+            <input type="number" id='bathroms' value={bathroms}
+              onChange={onChange} min='1' max='50' required
+              className='w-full px-4 py-2 text-xl text-gray-700
                     bg-white border border-gray-300 rounded 
                     transition duration-150 ease-in-out
                     focus:text-gray-700 focus:bg-white 
-                    focus:border-slate-600 text-center'/>               
-                </div>
-            </div>
+                    focus:border-slate-600 text-center'/>
+          </div>
+        </div>
 
-            <p className='text-lg mt-6 font-semibold'>Parking spot</p>
-            <div className='flex'> 
-                <button type='button' id='parking' value={true}
-                onClick={onChange} className={`mr-3 px-7 py-3 
-                font-medium text-sm uppercase shadow-md rounded
-                hover:shadow-lg focus:shadow-lg active:shadow-lg
-                transition duration-150 ease-in-out w-full ${
-                    !parking ? 'bg-white text-black':
-                    'bg-slate-600 text-white'
-                }`}>
-                    Yes
-                </button>
-                <button type='button' id='parking' value={false}
-                onClick={onChange} className={`ml-3 px-7 py-3 
-                font-medium text-sm uppercase shadow-md rounded
-                hover:shadow-lg focus:shadow-lg active:shadow-lg
-                transition duration-150 ease-in-out w-full ${
-                    parking ? 'bg-white text-black':
-                    'bg-slate-600 text-white'
-                }`}>
-                    no
-                </button>
-            </div>
-
-            <p className='text-lg mt-6 font-semibold'>Furnished</p>
-            <div className='flex'> 
-                <button type='button' id='furnished' value={true}
-                onClick={onChange} className={`mr-3 px-7 py-3 
-                font-medium text-sm uppercase shadow-md rounded
-                hover:shadow-lg focus:shadow-lg active:shadow-lg
-                transition duration-150 ease-in-out w-full ${
-                    !furnished ? 'bg-white text-black':
-                    'bg-slate-600 text-white'
-                }`}>
-                    yes
-                </button>
-                <button type='button' id='furnished' value={false}
-                onClick={onChange} className={`ml-3 px-7 py-3 
-                font-medium text-sm uppercase shadow-md rounded
-                hover:shadow-lg focus:shadow-lg active:shadow-lg
-                transition duration-150 ease-in-out w-full ${
-                    furnished ? 'bg-white text-black':
-                    'bg-slate-600 text-white'
-                }`}>
-                    no
-                </button>
-            </div>
-            <p className='text-lg mt-6 font-semibold'>Address</p>
-            <textarea type="text" id='address' value={address} onChange={onChange}
-            placeholder='Address' required 
-            className='w-full px-4 py-2 text-xl text-gray-700
-            bg-white border border-gray-300 rounded transition
-            duration-150 ease-in-out focus:text-gray-700 
-            focus:bg-white focus:border-slate-600 mb-6'/>
-            {!geolocationEnabled && (
-                <div className='flex space-x-6 justify-start mb-6'>
-                     <div className=''>
-                        <p className='text-lg font-semibold'>Latitude</p>
-                        <input type="number" id="latitude" value={latitude}
-                        onChange={onChange} required min='-90' max='90' className='w-full px-4 py-2
-                        text-xl text-gray-700 bg-white border border-gray-300
-                        rounded transition duration-150 ease-in-out focus:bg-white
-                        focus:text-gray-700 focus:border-slate-600 text-center'/>
-                    </div>
-
-                    <div className=''>
-                        <p className='text-lg font-semibold'>Longitude</p>
-                        <input type="number" id="longitude" value={longitude}
-                        onChange={onChange} required min='-180' max='180' className='w-full px-4 py-2
-                        text-xl text-gray-700 bg-white border border-gray-300
-                        rounded transition duration-150 ease-in-out focus:bg-white
-                        focus:text-gray-700 focus:border-slate-600 text-center'/>
-                    </div>
-                </div>
-            )}
-            <p className='text-lg font-semibold'>Description</p>
-            <textarea type="text" id='description' value={description} onChange={onChange}
-            placeholder='Description' required 
-            className='w-full px-4 py-2 text-xl text-gray-700
+        <p className='text-lg font-semibold'>Descripción</p>
+        <textarea type="text" id='description' value={description} onChange={onChange}
+          placeholder='Maximo 300 caracteres' required maxLength='300'
+          className='w-full px-4 py-2 text-xl text-gray-700
             bg-white border border-gray-300 rounded transition
             duration-150 ease-in-out focus:text-gray-700 
             focus:bg-white focus:border-slate-600 mb-6'/>
 
-            <p className='text-lg font-semibold'>Offer</p>
-            <div className='flex mb-6'> 
-                <button type='button' id='offer' value={true}
-                onClick={onChange} className={`mr-3 px-7 py-3 
-                font-medium text-sm uppercase shadow-md rounded
-                hover:shadow-lg focus:shadow-lg active:shadow-lg
-                transition duration-150 ease-in-out w-full ${
-                    !offer ? 'bg-white text-black':
-                    'bg-slate-600 text-white'
-                }`}>
-                    yes
-                </button>
-                <button type='button' id='offer' value={false}
-                onClick={onChange} className={`ml-3 px-7 py-3 
-                font-medium text-sm uppercase shadow-md rounded
-                hover:shadow-lg focus:shadow-lg active:shadow-lg
-                transition duration-150 ease-in-out w-full ${
-                    offer ? 'bg-white text-black':
-                    'bg-slate-600 text-white'
-                }`}>
-                    no
-                </button>
-            </div>
-            <div className='flex items-center mb-6'>
-                <div className=''>
-                <p className='text-lg font-semibold'>Regular price</p>
-                <div className='flex w-full justify-center items-center
+        <div className='flex items-center mb-6'>
+          <div className=''>
+            <p className='text-lg font-semibold'>Precio temporada baja</p>
+            <div className='flex w-full justify-center items-center
                 space-x-6'>
-                    <input type="number" id='regularPrice' 
-                    value={regularPrice} onChange={onChange} min='50'
-                    max='400000000' required className='w-full px-4
+              <input type="number" id='regularPrice'
+                value={regularPrice} onChange={onChange} min='50'
+                max='400000000' required className='w-full px-4
                     py-2 text-xl text-gray-700 bg-white border
                     border-gray-300 rounded transition duration-150
                     ease-in-out focus:text-gray-700 focus:bg-white
                     focus:border-slate-600 text-center'/>
-                    
-                { type === 'rent' &&(
-                    <div className=''>
-                        <p className='text-md w-full
-                        whitespace-nowrap'>$ / Night</p>
-                        </div>
-                )}
-                </div>
-                </div>
-            </div>
-            {offer && (
-                  <div className='flex items-center mb-6'>
-                  <div className=''>
-                  <p className='text-lg font-semibold'>Discounted price</p>
-                  <div className='flex w-full justify-center items-center
-                  space-x-6'>
-                      <input type="number" id='discountedPrice' 
-                      value={discountedPrice} onChange={onChange} min='50'
-                      max='400000000' required={offer} className='w-full px-4
-                      py-2 text-xl text-gray-700 bg-white border
-                      border-gray-300 rounded transition duration-150
-                      ease-in-out focus:text-gray-700 focus:bg-white
-                      focus:border-slate-600 text-center'/>
-                      
-                  { type === 'rent' &&(
-                      <div className=''>
-                          <p className='text-md w-full
-                          whitespace-nowrap'>$ / Night</p>
-                          </div>
-                  )}
-                  </div>
-                  </div>
-              </div>
-            )}
 
-            
-            <div className='mb-6'>
-                <p className='text-lg font-semibold'>Images</p>
-                <p className='text-gray-600'>The firs image will be the cover (max 6)</p>
-                <input type="file" id='images' onChange={onChange}
-                accept='.jpg,.png,.jpeg'
-                multiple
-                required
-                className='w-full px-3 py-1.5 text-gray-700
+              {type === 'rent' && (
+                <div className=''>
+                  <p className='text-md w-full
+                        whitespace-nowrap'>$ / Noche</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className='flex items-center mb-6'>
+          <div className=''>
+            <p className='text-lg font-semibold'>Precio temporada alta</p>
+            <div className='flex w-full justify-center items-center
+                space-x-6'>
+              <input type="number" id='highPrice'
+                value={highPrice} onChange={onChange} min='50'
+                max='400000000' required className='w-full px-4
+                    py-2 text-xl text-gray-700 bg-white border
+                    border-gray-300 rounded transition duration-150
+                    ease-in-out focus:text-gray-700 focus:bg-white
+                    focus:border-slate-600 text-center'/>
+
+              {type === 'rent' && (
+                <div className=''>
+                  <p className='text-md w-full
+                        whitespace-nowrap'>$ / Noche</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className='flex items-center mb-6'>
+          <div className=''>
+            <p className='text-lg font-semibold'>Precio temporada premiun</p>
+            <div className='flex w-full justify-center items-center
+                space-x-6'>
+              <input type="number" id='premiunPrice'
+                value={premiunPrice} onChange={onChange} min='50'
+                max='400000000' required className='w-full px-4
+                    py-2 text-xl text-gray-700 bg-white border
+                    border-gray-300 rounded transition duration-150
+                    ease-in-out focus:text-gray-700 focus:bg-white
+                    focus:border-slate-600 text-center'/>
+
+              {type === 'rent' && (
+                <div className=''>
+                  <p className='text-md w-full
+                        whitespace-nowrap'>$ / Noche</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className='mb-6'>
+          <p className='text-lg font-semibold'>Imagenes</p>
+          <p className='text-gray-600'>La primera será la portada (max 6)</p>
+          <input type="file" id='images' onChange={onChange}
+            accept='.jpg,.png,.jpeg'
+            multiple
+            required
+            className='w-full px-3 py-1.5 text-gray-700
                 bg-white border border-gray-300 rounded
                 transition duration-150 ease-in-out
                 focus:bg-white focus:border-slate-600'/>
-            </div>
+          <div className="form-group multi-preview md:w-[100%] lg:w-[94%] mt-3  mb-12 md:mb-6" style={{ display: 'flex', flexWrap: 'nowrap' }}>
+            <ul className="has-scrollbar">
+              {selectedImage &&
+                Array.from(selectedImage).map((image, index) => (
+                  <img className='rounded-2xl' key={index} src={URL.createObjectURL(image)} alt={`Image ${index}`} style={{ maxWidth: '100%', height: '220px', marginRight: '10px' }} />
+                ))
+              }
+            </ul>
+          </div>
+        </div>
 
-        
-            <div  className="form-group multi-preview md:w-[100%] lg:w-[94%]  mb-12 md:mb-6" style={{ display: 'flex', flexWrap: 'nowrap' }}>
-                  <ul className="has-scrollbar">
-                {selectedImage &&
-                    Array.from(selectedImage).map((image, index) => (
-          
-                    <img className='rounded-2xl'key={index} src={URL.createObjectURL(image)} alt={`Image ${index}`} style={{ maxWidth: '100%', height: '220px', marginRight: '10px' }} />
-                    ))
-                }
-                </ul>
-                
-            </div>
+        <div>
+          <p className='text-lg font-semibold mb-2'>Seleccione una ubicación especifica</p>
+          <div id="mapid" style={{ height: "400px" }}></div>
+          {/* <p>Latitude: {geolocation.lat}</p>
+          <p>Longitude: {geolocation.lng}</p> */}
+          {/* <p>Address: {address}</p> */}
+        </div>
 
-            <button type='submit' className='mb-4 w-full px-4
-            py-3 bg-blue-600 text-white font-medium text-sm
-            uppercase rounded shadow-md hover:bg-blue-700
-            hover:shadow-lg focus:bg-blue-700 focus:shadow-lg
-            active:bg-blue-800 active:shadow-lg transition
-            duration-150 ease-in-out text-center'>Create Listing</button>
-        </form>
+        {
+          loading && (
+            <div className="mt-1 mb-1">
+              <span className="font-bold text-cyan-700 text-lg">Subiendo... {progress}%</span>
+              <progress
+                className="bg-gray-300 w-full h-3 rounded-full overflow-hidden"
+                value={progress}
+                max="100"
+              >
+              </progress>
+            </div>
+          )
+        }
+
+        <button type='submit' className='mx-auto block mb-4 w-[400px] px-4 mt-4
+            py-3 bg-slate-600 text-white font-bold text-sm
+            uppercase rounded shadow-md hover:bg-slate-700
+            hover:shadow-lg focus:bg-slate-700 focus:shadow-lg
+            active:bg-slate-800 active:shadow-lg transition
+            duration-150 ease-in-out text-center'>Guardar</button>
+
+      </form>
     </main>
   )
 }
+
