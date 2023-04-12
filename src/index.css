@@ -1907,3 +1907,13 @@ a {
 .btn-cancel-class {
   background-color: #999 !important;
 }
+
+ /* .leaflet-control-fullscreen-button.leaflet-bar-part {
+  background-image: url(../src/assets/fullscreen.svg);
+  background-size: 20px 30px;
+} */
+
+.leaflet-control-geocoder-icon {
+  background-image: url(../src/assets/search.svg);
+  background-size: 20px 30px;
+} 
