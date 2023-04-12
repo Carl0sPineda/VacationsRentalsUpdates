@@ -10,7 +10,6 @@ import {
   query
 } from "firebase/firestore";
 import { useState, useEffect } from "react";
-// import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import { db } from "../firebase";
@@ -34,9 +33,10 @@ import {
 } from "react-icons/fa";
 import { getAuth } from "firebase/auth";
 import Contact from "../components/Contact";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, Popup, TileLayer, LayersControl } from "react-leaflet";
 import { toast } from "react-toastify";
-import "leaflet/dist/leaflet.css";
+import 'leaflet-fullscreen';
+import "leaflet-fullscreen/dist/leaflet.fullscreen.css"; 
 
 export default function Listing() {
   const auth = getAuth();
@@ -48,6 +48,10 @@ export default function Listing() {
   const [comments, setComments] = useState([])
   // const [shareLinkCopied, setShareLinkCopied] = useState(false);
   const [contactLandlord, setContactLandlord] = useState(false);
+  const [expanded, setExpanded] = useState(false)
+  const MAX_CHARACTERS = 200;
+  const { BaseLayer } = LayersControl;
+
   SwiperCore.use([Autoplay, Navigation, Pagination]);
 
   useEffect(() => {
@@ -116,9 +120,9 @@ export default function Listing() {
           Link Copied
         </p>
       )} */}
-      <div className="m-4 flex flex-col md:flex-row max-w-6xl lg:mx-auto p-4 rounded-lg shadow-lg bg-white lg:space-x-5">
+      <div className="m-4 flex flex-col md:flex-row max-w-7xl lg:mx-auto p-4 rounded-lg shadow-lg bg-white lg:space-x-3">
 
-        <div className="w-full  overflow-x-hidden mt-6 md:mt-0 md:ml-2">
+        <div className="w-full overflow-x-hidden mt-6 md:mt-0 md:ml-2">
           <Swiper
             slidesPerView={1}
             navigation
@@ -131,7 +135,7 @@ export default function Listing() {
               <SwiperSlide
                 key={index}>
                 <div
-                  className="relative w-full overflow-hidden h-[300px] md:h-[400px]"
+                  className="relative w-full overflow-hidden h-[400px] md:h-[400px]"
                   style={{
                     background: `url(${listing.imgUrls[index]}) center no-repeat`,
                     backgroundSize: "cover",
@@ -163,7 +167,16 @@ export default function Listing() {
           </div>
           <p className="mt-3 mb-3">
             <span className="font-semibold">Descripción:</span>
-            {listing.description}
+            {/* Utiliza el método slice para mostrar solo una cantidad limitada de caracteres */}
+            {expanded ? listing.description : listing.description.length > MAX_CHARACTERS ? listing.description.slice(0, MAX_CHARACTERS) + "..." : listing.description}
+            {/* Agrega un botón para mostrar el resto de la descripción */}
+            {listing.description.length > MAX_CHARACTERS && !expanded && (
+              <button className="text-blue-600" onClick={() => setExpanded(true)}>Ver más</button>
+            )}
+            {/* Agrega un botón para ocultar el resto de la descripción */}
+            {expanded && (
+              <button className="text-blue-600" onClick={() => setExpanded(false)}>Ver menos</button>
+            )}
           </p>
           <ul className="flex items-center space-x-2 sm:space-x-10 text-sm font-semibold mb-6">
             <li className="flex items-center whitespace-nowrap">
@@ -231,17 +244,35 @@ export default function Listing() {
           </div>
 
         </div>
-        <div className="w-full h-[200px] md:h-[600px] z-10 overflow-x-hidden mt-6 md:mt-0 md:ml-2">
+        <div className="w-full h-[400px] md:h-[600px] z-10 overflow-x-hidden mt-6 md:mt-0 md:ml-2">
           <MapContainer
             center={[listing.geolocation.lat, listing.geolocation.lng]}
-            zoom={10}
-            scrollWheelZoom={false}
+            zoom={15}
+            // scrollWheelZoom={false}
             style={{ height: '100%', width: '100%' }}
-            attributionControl={false}>
-            <TileLayer
+            attributionControl={false}
+            fullscreenControl={{
+              position: 'topleft'
+            }}>
+              
+            {/* <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
+            /> */}
+            <LayersControl position="topright">
+        <BaseLayer checked name="Por defecto">
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+        </BaseLayer>
+        <BaseLayer name="Satellite">
+          <TileLayer
+            attribution="Tiles &copy; Esri"
+            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+          />
+        </BaseLayer>
+      </LayersControl>
             <Marker
               position={[listing.geolocation.lat, listing.geolocation.lng]}
             >
