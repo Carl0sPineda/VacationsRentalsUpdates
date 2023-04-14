@@ -86,14 +86,17 @@ export default function Properties() {
 
 
   return (
-    <div className="sm:mr-3 sm:ml-3 pt-4 space-y-6">
+    <div className="sm:mr-3 sm:ml-5 pt-4 space-y-6">
       <h1 className="text-3xl text-center mt-6 font-bold mb-2">Propiedades Disponibles</h1>
 
-      <div className="flex flex-col md:flex-row space-y-10 md:space-y-0 md:space-x-10" style={{justifyContent: "center", alignItems: "center"}}>
+      <div className="flex md:flex-row space-y-10 md:space-y-0 md:space-x-10 justify-center sm: flex-col ml-6">
 
           <div>
-            <label className="text-sm text-center mt-6 font-bold mb-2">Habitaciones </label>
-              <select className="cursor-pointer w-full md:w-auto" onChange={event =>{setCantBendrooms(event.target.value)}}>
+            <label className="text-sm text-center mt-6 font-bold mb-2 mr-4 sm:mb-10">Habitaciones</label>
+              <select className="cursor-pointer w-small text-sm text-gray-700
+                 bg-white border border-gray-400 rounded transition
+                  duration-400 ease-in-out focus:text-gray-700 
+                  focus:bg-white focus:border-slate-400" onChange={event =>{setCantBendrooms(event.target.value)}} style={{ borderRadius:100}}>
                 <option value="">Sin filtro</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -105,8 +108,11 @@ export default function Properties() {
           </div>
 
           <div>
-            <label className="text-sm text-center mt-6 font-bold mb-2">Baños </label>
-              <select className="cursor-pointer w-full md:w-auto" onChange={event =>{setCantBathdrooms(event.target.value)}}>
+            <label className="text-sm text-center mt-6 font-bold mb-2 mr-4">Baños</label>
+              <select className="cursor-pointer w-small text-sm text-gray-700
+                 bg-white border border-gray-400 rounded transition
+                  duration-400 ease-in-out focus:text-gray-700 
+                  focus:bg-white focus:border-slate-400" onChange={event =>{setCantBathdrooms(event.target.value)}} style={{ borderRadius:100}}>
                 <option value="">Sin filtro</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -118,16 +124,19 @@ export default function Properties() {
           </div>
 
           <div>
+          <label className="text-sm text-center mt-6 font-bold mb-2 mr-4">Precio</label>
           <input type="number" step={10}
           placeholder="Filtrar por precio" onChange={event =>{{setPriceRange(event.target.value)}}}
           className='w-small text-sm text-gray-700
           bg-white border border-gray-400 rounded transition
           duration-400 ease-in-out focus:text-gray-700 
-          focus:bg-white focus:border-slate-400'>
+          focus:bg-white focus:border-slate-400'
+          style={{ borderRadius:100}}>
           </input>
           </div>
 
           <div>
+          <label className="text-sm text-center mt-6 font-bold mb-2 mr-4">Ubicacion</label>
           <input type="text" placeholder="Filtrar por ubicación" onChange={event =>{setSearchBar(event.target.value)}}
           className='w-small px-4 py-2 text-sm text-gray-700
           bg-white border border-gray-400 rounded transition
