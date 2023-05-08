@@ -37,18 +37,19 @@ export default function Contact({ userRef, listing }) {
         templateParams,
         import.meta.env.VITE_PUBLIC_KEY_EMAILJS
       )
-      .then((result) => {
-        // console.log(result.text);
-      })
+      .then((result) => {})
       .catch((error) => {
-        // console.log(error.text);
+        toast.error("Ha ocurrido un error.");
       });
-    Swal.fire({
-      title: "Solicitud de reserva enviada",
-      text: "Gracias por su interés. Nos pondremos en contacto con usted lo antes posible para confirmar su reserva.",
-      icon: "success",
-      confirmButtonText: "Aceptar",
-    });
+    toast.success(
+      "Solicitud de reserva enviada, nos pondremos en contacto mediante su email para la confirmación."
+    );
+    // Swal.fire({
+    //   title: "Solicitud de reserva enviada",
+    //   text: "Gracias por su interés. Nos pondremos en contacto con usted lo antes posible para confirmar su reserva.",
+    //   icon: "success",
+    //   confirmButtonText: "Aceptar",
+    // });
 
     setSubmitting(false);
     resetForm();
@@ -62,7 +63,7 @@ export default function Contact({ userRef, listing }) {
     phone: Yup.string().required("El teléfono es requerido"),
     persons: Yup.number()
       .required("La cantidad de personas es requerida")
-      .min(1, "La cantidad de personas debe ser mayor a 0"),
+      .min(1, "Debe ser ser mayor a 0"),
     startDate: Yup.date().required("La fecha de inicio es requerida"),
     endDate: Yup.date()
       .min(
@@ -87,131 +88,108 @@ export default function Contact({ userRef, listing }) {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          <Form className="flex flex-col w-full">
-            <div className="mb-6">
-              <label
-                htmlFor="name"
-                className="block text-gray-700 font-bold mb-2"
-              >
-                Nombre
-              </label>
-              <Field
-                type="text"
-                name="name"
-                id="name"
-                className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-700 focus:bg-white focus:border-slate-600"
-              />
-              <ErrorMessage
-                name="name"
-                component="div"
-                className="text-red-600"
-              />
-            </div>
+          <Form className="w-full max-w-lg ">
+            <div className="flex flex-wrap -mx-3 mb-6">
+              <h1 className="ml-3 mt-4 mb-2 text-3xl font-bold text-teal-700">
+                Solicitud de reserva
+              </h1>
+              <div className="w-full md:w-1.5/2 px-3">
+                <ErrorMessage
+                  name="name"
+                  component="span"
+                  className="text-red-600 font-semibold text-sm"
+                />
+                <Field
+                  type="text"
+                  name="name"
+                  id="name"
+                  className=" block w-full text-gray-700 border-b-1 border-b-gray-700    placeholder-gray-700  leading-tight  bg-transparent py-3 px-4 mb-6 focus:ring-0    "
+                  placeholder="Nombre completo"
+                />
+              </div>
 
-            <div className="mb-6">
-              <label
-                htmlFor="email"
-                className="block text-gray-700 font-bold mb-2"
-              >
-                Correo electrónico
-              </label>
-              <Field
-                type="email"
-                name="email"
-                id="email"
-                className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-700 focus:bg-white focus:border-slate-600"
-              />
-              <ErrorMessage
-                name="email"
-                component="div"
-                className="text-red-600"
-              />
-            </div>
+              <div className="w-full md:w-1.5/2 px-3">
+                <ErrorMessage
+                  name="email"
+                  component="div"
+                  className="text-red-600 font-semibold text-sm mt-0"
+                />
+                <Field
+                  type="email"
+                  name="email"
+                  id="email"
+                  className=" block w-full text-gray-700 border-b-1 border-b-gray-700  placeholder-gray-700  leading-tight  bg-transparent py-3 px-4 mb-6 focus:ring-0    "
+                  placeholder="Email"
+                />
+              </div>
 
-            <div className="mb-6">
-              <label
-                htmlFor="phone"
-                className="block text-gray-700 font-bold mb-2"
-              >
-                Teléfono
-              </label>
-              <Field
-                type="tel"
-                name="phone"
-                id="phone"
-                className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-700 focus:bg-white focus:border-slate-600"
-              />
-              <ErrorMessage
-                name="phone"
-                component="div"
-                className="text-red-600"
-              />
-            </div>
+              <div className="w-full md:w-1/2 px-3">
+                <ErrorMessage
+                  name="phone"
+                  component="span"
+                  className="text-red-600 font-semibold text-sm"
+                />
+                <Field
+                  type="tel"
+                  name="phone"
+                  id="phone"
+                  className=" block w-full text-gray-700 border-b-1 border-b-gray-700  placeholder-gray-700  bg-transparent py-3 px-4 mb-6 focus:ring-0  "
+                  placeholder="Teléfono"
+                />
+              </div>
 
-            <div className="mb-6">
-              <label
-                htmlFor="persons"
-                className="block text-gray-700 font-bold mb-2"
-              >
-                Cantidad de personas
-              </label>
-              <Field
-                type="number"
-                name="persons"
-                id="persons"
-                className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-700 focus:bg-white focus:border-slate-600"
-              />
-              <ErrorMessage
-                name="persons"
-                component="div"
-                className="text-red-600"
-              />
-            </div>
+              <div className="w-full md:w-1/2 px-3">
+                <ErrorMessage
+                  name="persons"
+                  component="span"
+                  className="text-red-600 font-semibold text-sm"
+                />
+                <Field
+                  type="number"
+                  name="persons"
+                  placeholder="Cantidad de personas"
+                  id="persons"
+                  className=" block w-full text-gray-700 border-b-1 border-b-gray-700  placeholder-gray-700  bg-transparent py-3 px-4 mb-6 focus:ring-0  "
+                />
+              </div>
 
-            <div className="mb-6">
-              <label
-                htmlFor="startDate"
-                className="block text-gray-700 font-bold mb-2"
-              >
-                Fecha de inicio
-              </label>
-              <Field
-                type="date"
-                name="startDate"
-                id="startDate"
-                className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-700 focus:bg-white focus:border-slate-600"
-              />
-              <ErrorMessage
-                name="startDate"
-                component="div"
-                className="text-red-600"
-              />
-            </div>
+              <div className="w-full md:w-1/2 px-3">
+                <label htmlFor="startDate" className=" text-gray-800">
+                  Fecha de inicio
+                </label>
+                <ErrorMessage
+                  name="startDate"
+                  component="span"
+                  className="text-red-600 font-semibold text-sm"
+                />
+                <Field
+                  type="date"
+                  name="startDate"
+                  id="startDate"
+                  className="mt-1 block w-full text-gray-700 border-b-1 border-b-gray-700  placeholder-gray-700  bg-transparent py-3 px-4 mb-6 focus:ring-0  "
+                />
+              </div>
 
-            <div className="mb-6">
-              <label
-                htmlFor="endDate"
-                className="block text-gray-700 font-bold mb-2"
-              >
-                Fecha de fin
-              </label>
-              <Field
-                type="date"
-                name="endDate"
-                id="endDate"
-                className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-700 focus:bg-white focus:border-slate-600"
-              />
-              <ErrorMessage
-                name="endDate"
-                component="div"
-                className="text-red-600"
-              />
-            </div>
+              <div className="w-full md:w-1/2 px-3">
+                <label htmlFor="endDate" className=" text-gray-800">
+                  Fecha de fin
+                </label>
+                <ErrorMessage
+                  name="endDate"
+                  component="span"
+                  className="text-red-600 font-semibold text-sm"
+                />
+                <Field
+                  type="date"
+                  name="endDate"
+                  id="endDate"
+                  className="mt-1 block w-full text-gray-700 border-b-1 border-b-gray-700  placeholder-gray-700  bg-transparent py-3 px-4 mb-6 focus:ring-0  "
+                />
+              </div>
 
-            <div className="mt-8">
               <button
                 type="submit"
-                className="w-full px-6 py-3 font-bold text-center text-white bg-slate-600 rounded hover:bg-slate-500 focus:outline-none focus:shadow-outline-slate active:bg-slate-700"
+                className="w-[300] ml-3 mt-4 mb-4 px-3 py-2 font-bold text-center text-white bg-[#078169] rounded hover:bg-[#568577] focus:outline-none focus:shadow-outline-slate active:bg-slate-700"
               >
                 Enviar
               </button>
