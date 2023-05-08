@@ -93,103 +93,103 @@ export default function Contact({ userRef, listing }) {
               <h1 className="ml-3 mt-4 mb-2 text-3xl font-bold text-teal-700">
                 Solicitud de reserva
               </h1>
-              <div className="w-full md:w-1.5/2 px-3">
-                <ErrorMessage
-                  name="name"
-                  component="span"
-                  className="text-red-600 font-semibold text-sm"
-                />
+              <div className="w-full md:w-1.5/2 px-3 mb-4">
                 <Field
                   type="text"
                   name="name"
                   id="name"
-                  className=" block w-full text-gray-700 border-b-1 border-b-gray-700    placeholder-gray-700  leading-tight  bg-transparent py-3 px-4 mb-6 focus:ring-0    "
+                  className=" block w-full text-gray-700 border-b-1 border-b-gray-700    placeholder-gray-700  leading-tight  bg-transparent py-3 px-4 focus:ring-0    "
                   placeholder="Nombre completo"
+                />
+                <ErrorMessage
+                  name="name"
+                  component="span"
+                  className="text-red-600 font-semibold text-sm"
                 />
               </div>
 
-              <div className="w-full md:w-1.5/2 px-3">
-                <ErrorMessage
-                  name="email"
-                  component="div"
-                  className="text-red-600 font-semibold text-sm mt-0"
-                />
+              <div className="w-full md:w-1.5/2 px-3 mb-4">
                 <Field
                   type="email"
                   name="email"
                   id="email"
-                  className=" block w-full text-gray-700 border-b-1 border-b-gray-700  placeholder-gray-700  leading-tight  bg-transparent py-3 px-4 mb-6 focus:ring-0    "
+                  className=" block w-full text-gray-700 border-b-1 border-b-gray-700  placeholder-gray-700  leading-tight  bg-transparent py-3 px-4 focus:ring-0    "
                   placeholder="Email"
+                />
+                <ErrorMessage
+                  name="email"
+                  component="span"
+                  className="text-red-600 font-semibold text-sm mt-0"
                 />
               </div>
 
-              <div className="w-full md:w-1/2 px-3">
-                <ErrorMessage
-                  name="phone"
-                  component="span"
-                  className="text-red-600 font-semibold text-sm"
-                />
+              <div className="w-full md:w-1/2 px-3 mb-4">
                 <Field
                   type="tel"
                   name="phone"
                   id="phone"
-                  className=" block w-full text-gray-700 border-b-1 border-b-gray-700  placeholder-gray-700  bg-transparent py-3 px-4 mb-6 focus:ring-0  "
+                  className=" block w-full text-gray-700 border-b-1 border-b-gray-700  placeholder-gray-700  bg-transparent py-3 px-4 focus:ring-0  "
                   placeholder="Teléfono"
                 />
-              </div>
-
-              <div className="w-full md:w-1/2 px-3">
                 <ErrorMessage
-                  name="persons"
+                  name="phone"
                   component="span"
                   className="text-red-600 font-semibold text-sm"
                 />
+              </div>
+
+              <div className="w-full md:w-1/2 px-3 mb-4">
                 <Field
                   type="number"
                   name="persons"
                   placeholder="Cantidad de personas"
                   id="persons"
-                  className=" block w-full text-gray-700 border-b-1 border-b-gray-700  placeholder-gray-700  bg-transparent py-3 px-4 mb-6 focus:ring-0  "
+                  className=" block w-full text-gray-700 border-b-1 border-b-gray-700  placeholder-gray-700  bg-transparent py-3 px-4 focus:ring-0  "
                 />
-              </div>
-
-              <div className="w-full md:w-1/2 px-3">
-                <label htmlFor="startDate" className=" text-gray-800">
-                  Fecha de inicio
-                </label>
                 <ErrorMessage
-                  name="startDate"
+                  name="persons"
                   component="span"
                   className="text-red-600 font-semibold text-sm"
                 />
+              </div>
+
+              <div className="w-full md:w-1/2 px-3 mb-4">
+                <label htmlFor="startDate" className=" text-gray-800">
+                  Fecha de inicio
+                </label>
                 <Field
                   type="date"
                   name="startDate"
                   id="startDate"
-                  className="mt-1 block w-full text-gray-700 border-b-1 border-b-gray-700  placeholder-gray-700  bg-transparent py-3 px-4 mb-6 focus:ring-0  "
+                  className="mt-1 block w-full text-gray-700 border-b-1 border-b-gray-700  placeholder-gray-700  bg-transparent py-3 px-4 focus:ring-0  "
                 />
-              </div>
-
-              <div className="w-full md:w-1/2 px-3">
-                <label htmlFor="endDate" className=" text-gray-800">
-                  Fecha de fin
-                </label>
                 <ErrorMessage
-                  name="endDate"
+                  name="startDate"
                   component="span"
                   className="text-red-600 font-semibold text-sm"
                 />
+              </div>
+
+              <div className="w-full md:w-1/2 px-3 mb-4">
+                <label htmlFor="endDate" className=" text-gray-800">
+                  Fecha de fin
+                </label>
                 <Field
                   type="date"
                   name="endDate"
                   id="endDate"
-                  className="mt-1 block w-full text-gray-700 border-b-1 border-b-gray-700  placeholder-gray-700  bg-transparent py-3 px-4 mb-6 focus:ring-0  "
+                  className="mt-1 block w-full text-gray-700 border-b-1 border-b-gray-700  placeholder-gray-700  bg-transparent py-3 px-4 focus:ring-0  "
+                />
+                <ErrorMessage
+                  name="endDate"
+                  component="span"
+                  className="text-red-600 font-semibold text-sm"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-[300] ml-3 mt-4 mb-4 px-3 py-2 font-bold text-center text-white bg-[#078169] rounded hover:bg-[#568577] focus:outline-none focus:shadow-outline-slate active:bg-slate-700"
+                className="w-[300] ml-3 mb-4 px-3 py-2 font-bold text-center text-white bg-[#078169] rounded hover:bg-[#568577] focus:outline-none focus:shadow-outline-slate active:bg-slate-700"
               >
                 Enviar
               </button>
