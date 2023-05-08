@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from "react";
 import { getAuth, updateProfile } from "firebase/auth";
 import {
   collection,
@@ -11,28 +11,29 @@ import {
   where,
 } from "firebase/firestore";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import { db } from "../firebase";
-import { FcHome } from "react-icons/fc"
+import { FcHome } from "react-icons/fc";
+import { BiListPlus } from "react-icons/bi";
 import ListingItem from "../components/ListingItem";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 
 export default function Profile() {
-  const auth = getAuth()
-  const navigate = useNavigate()
-  const [changeDetail, setChangeDetail] = useState(false)
-  const [listings, setListings] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const isLoggedIn = auth.currentUser.email === import.meta.env.VITE_EMAIL
+  const auth = getAuth();
+  const navigate = useNavigate();
+  const [changeDetail, setChangeDetail] = useState(false);
+  const [listings, setListings] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const isLoggedIn = auth.currentUser.email === import.meta.env.VITE_EMAIL;
   const [formData, setFormData] = useState({
     name: auth.currentUser.displayName,
-    email: auth.currentUser.email
-  })
+    email: auth.currentUser.email,
+  });
 
-  const { name, email } = formData
+  const { name, email } = formData;
   function onLogout() {
-    auth.signOut()
-    navigate("/")
+    auth.signOut();
+    navigate("/");
   }
 
   function onChange(e) {
@@ -48,40 +49,40 @@ export default function Profile() {
         //update display name in firebase auth
         await updateProfile(auth.currentUser, {
           displayName: name,
-        })
+        });
       //update name in the firestore
-      const docRef = doc(db, "users", auth.currentUser.uid)
+      const docRef = doc(db, "users", auth.currentUser.uid);
       await updateDoc(docRef, {
         name,
-      })
-      toast.success("Actualizado con éxito!!")
+      });
+      toast.success("Actualizado con éxito!!");
     } catch (error) {
-      toast.error("No se puede modificar")
+      toast.error("No se puede modificar");
     }
   }
 
   useEffect(() => {
     async function fectchUserListings() {
-      setLoading(true)
-      const listingRef = collection(db, 'listings')
+      setLoading(true);
+      const listingRef = collection(db, "listings");
       const q = query(
         listingRef,
-        where('userRef', '==', auth.currentUser.uid),
-        orderBy('timestamp', 'desc')
-      )
-      const querySnap = await getDocs(q)
-      let listings = []
+        where("userRef", "==", auth.currentUser.uid),
+        orderBy("timestamp", "desc")
+      );
+      const querySnap = await getDocs(q);
+      let listings = [];
       querySnap.forEach((doc) => {
         return listings.push({
           id: doc.id,
-          data: doc.data()
-        })
-      })
-      setListings(listings)
-      setLoading(false)
+          data: doc.data(),
+        });
+      });
+      setListings(listings);
+      setLoading(false);
     }
-    fectchUserListings()
-  }, [auth.currentUser.uid])
+    fectchUserListings();
+  }, [auth.currentUser.uid]);
 
   //Codigo base
   //  async function onDelete(listingID){
@@ -97,76 +98,110 @@ export default function Profile() {
 
   async function onDelete(listingID) {
     Swal.fire({
-      title: 'Quieres continuar?',
+      title: "Quieres continuar?",
       text: "Se eliminará de forma permanente!",
       width: 350,
       showCancelButton: true,
-      confirmButtonColor: '#166534',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Eliminar',
+      confirmButtonColor: "#166534",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Eliminar",
       customClass: {
-        confirmButton: 'btn-confirm-class',
-        cancelButton: 'btn-cancel-class'
-      }
+        confirmButton: "btn-confirm-class",
+        cancelButton: "btn-cancel-class",
+      },
     }).then(async (result) => {
       if (result.value) {
-        await deleteDoc(doc(db, 'listings', listingID))
+        await deleteDoc(doc(db, "listings", listingID));
         const updatedListings = listings.filter(
           (listing) => listing.id !== listingID
-        )
-        setListings(updatedListings)
-        toast.success('Eliminado con éxito')
+        );
+        setListings(updatedListings);
+        toast.success("Eliminado con éxito");
       }
-    })
+    });
   }
 
   function onEdit(listingID) {
-    navigate(`/edit-listing/${listingID}`)
+    navigate(`/edit-listing/${listingID}`);
   }
 
   return (
     <>
-      <section className='max-w-6xl mx-auto flex 
-    justify-center items-center flex-col'>
-        <h1 className='tex-3xl text-center mt-6
-       font-bold'>Mi perfil</h1>
-        <div className='w-full md:w-[50%] mt-6 px-3'>
+      <section
+        className="max-w-6xl mx-auto flex 
+    justify-center items-center flex-col"
+      >
+        <h1
+          className="tex-3xl text-center mt-6
+       font-bold"
+        >
+          Mi perfil
+        </h1>
+        <div className="w-full md:w-[50%] mt-6 px-3">
           <form>
             {/* Name Input */}
-            <input type="text" id='name' value={name}
-              disabled={!changeDetail} onChange={onChange}
+            <input
+              type="text"
+              id="name"
+              value={name}
+              disabled={!changeDetail}
+              onChange={onChange}
               className={`mb-6 w-full px-4 py-2 text-xl
           text-gray-700 bg-white border border-gray-300
-          rounded transition ease-in-out ${changeDetail &&
-                "bg-red-200 focus:bg-red-200"}`} />
+          rounded transition ease-in-out ${
+            changeDetail && "bg-red-200 focus:bg-red-200"
+          }`}
+            />
 
             {/* Email input */}
-            <input type="email" id='email' value={email}
-              disabled className='mb-6 w-full px-4 py-2 text-xl
+            <input
+              type="email"
+              id="email"
+              value={email}
+              disabled
+              className="mb-6 w-full px-4 py-2 text-xl
           text-gray-700 bg-white border border-gray-300
-          rounded transition ease-in-out' />
+          rounded transition ease-in-out"
+            />
 
-            <div className='flex justify-between
-          whitespace-nowrap text-sm sm:text-lg mb-6'>
-              <p className='flex items-center'>Quieres cambiar tu nombre de usuario?
+            <div
+              className="flex justify-between
+          whitespace-nowrap text-sm sm:text-lg mb-6"
+            >
+              <p className="flex items-center">
+                Quieres cambiar tu nombre de usuario?
                 <span
                   onClick={() => {
-                    changeDetail && onSubmit()
-                    setChangeDetail((prevState) => !prevState)
+                    changeDetail && onSubmit();
+                    setChangeDetail((prevState) => !prevState);
                   }}
-                  className='text-red-600
+                  className="text-red-600
               hover:text-red-700 transition ease-in-out
-              duration-200 ml-1 cursor-pointer'>{changeDetail ? "Aplicar cambios" : "Editar"}</span>
+              duration-200 ml-1 cursor-pointer"
+                >
+                  {changeDetail ? "Aplicar cambios" : "Editar"}
+                </span>
               </p>
-              <p onClick={onLogout} className='text-blue-600 hover:text-blue-800
+              <p
+                onClick={onLogout}
+                className="text-blue-600 hover:text-blue-800
             transition duration-200 ease-in-out
-            cursor-pointer'>Sign out</p>
+            cursor-pointer"
+              >
+                Sign out
+              </p>
             </div>
           </form>
           {isLoggedIn ? (
-            <button type="submit" className="w-full bg-slate-600 text-white uppercase px-7 py-3 text-sm font-medium rounded shadow-md hover:bg-slate-700 transition duration-150 ease-in-out hover:shadow-lg active:bg-slate-800">
-              <Link to="/create-listing" className="flex justify-center items-center">
-                <FcHome className="mr-2 text-3xl bg-red-200 rounded-full p-1 border-2" />
+            <button
+              type="submit"
+              className="w-full bg-[#078169] text-white uppercase px-7 py-3 text-sm font-medium rounded shadow-md hover:bg-[#568577] transition duration-150 ease-in-out hover:shadow-lg active:bg-[[#568577]]"
+            >
+              <Link
+                to="/create-listing"
+                className="flex justify-center items-center"
+              >
+                <BiListPlus className="mr-2 text-3xl bg-black rounded-full p-1 border-2" />
                 Agrega una propiedad
               </Link>
             </button>
@@ -177,7 +212,7 @@ export default function Profile() {
         {!loading && listings.length > 0 && (
           <>
             <h2 className="text-2xl text-center font-semibold mb-6">
-              Mis propiedades
+              Mis propiedades agregadas
             </h2>
             <ul className="sm:grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 mt-6 mb-6">
               {listings.map((listing) => (
@@ -194,5 +229,5 @@ export default function Profile() {
         )}
       </div>
     </>
-  )
+  );
 }

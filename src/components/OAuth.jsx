@@ -1,84 +1,89 @@
-import { getAuth, GoogleAuthProvider, signInWithPopup, FacebookAuthProvider } from 'firebase/auth';
-import { getDoc, doc, setDoc, serverTimestamp, } from 'firebase/firestore';
-import React from 'react'
-import { FcGoogle} from "react-icons/fc";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  FacebookAuthProvider,
+} from "firebase/auth";
+import { getDoc, doc, setDoc, serverTimestamp } from "firebase/firestore";
+import React from "react";
+import { FcGoogle } from "react-icons/fc";
 import { GrFacebook } from "react-icons/gr";
-import { toast } from 'react-toastify';
-import { db } from '../firebase';
-import { useNavigate } from 'react-router-dom';
+import { toast } from "react-toastify";
+import { db } from "../firebase";
+import { useNavigate } from "react-router-dom";
 
 export default function OAuth() {
-  const navigate = useNavigate()
-  
-  async function onGoogleClick(){
+  const navigate = useNavigate();
+
+  async function onGoogleClick() {
     try {
-      const auth = getAuth()
-      const provider = new GoogleAuthProvider()
-      const result = await signInWithPopup(auth,provider)
-      const user = result.user
-      
-      const docRef = doc(db, "users", user.uid)
-      const docSnap = await getDoc(docRef)
+      const auth = getAuth();
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
 
       if (!docSnap.exists()) {
-        await setDoc(docRef,{
+        await setDoc(docRef, {
           name: user.displayName,
           email: user.email,
-          timestamp: serverTimestamp()
-
-        })
+          timestamp: serverTimestamp(),
+        });
       }
-      navigate("/")
+      navigate("/");
+      toast.success("Login realizado con éxito!!");
     } catch (error) {
-      toast.error("Error al realizar el login con Google")
+      toast.error("Error al realizar el login con Google");
       console.log(error);
     }
   }
 
-  async function onFacebookClick(){
+  async function onFacebookClick() {
     try {
-      const auth = getAuth()
-      const provider = new FacebookAuthProvider()
-      const result = await signInWithPopup(auth,provider)
-      const user = result.user
-      
-      const docRef = doc(db, "users", user.uid)
-      const docSnap = await getDoc(docRef)
+      const auth = getAuth();
+      const provider = new FacebookAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
 
       if (!docSnap.exists()) {
-        await setDoc(docRef,{
+        await setDoc(docRef, {
           name: user.displayName,
           email: user.email,
-          timestamp: serverTimestamp()
-
-        })
+          timestamp: serverTimestamp(),
+        });
       }
-      navigate("/")
+      navigate("/");
+      toast.success("Login realizado con éxito!!");
     } catch (error) {
-      toast.error("Error al realizar el login con Facebook")
+      toast.error("Error al realizar el login con Facebook");
       console.log(error);
     }
   }
-  
+
   return (
     <div>
-    <button
-      type="button" 
-      onClick={onGoogleClick}
-      className="flex items-center justify-center w-full bg-red-700 text-white px-7 py-3 uppercase text-sm font-medium hover:bg-red-800 active:bg-red-900 shadow-md hover:shadow-lg active:shadow-lg transition duration-150 ease-in-out rounded"
-    >
-      <FcGoogle className="text-2xl  bg-white rounded-full mr-2" />
-      Login con Google
-    </button>
+      <button
+        type="button"
+        onClick={onGoogleClick}
+        className="flex items-center justify-center w-full bg-red-700 text-white px-7 py-3 uppercase text-sm font-medium hover:bg-red-800 active:bg-red-900 shadow-md hover:shadow-lg active:shadow-lg transition duration-150 ease-in-out rounded"
+      >
+        <FcGoogle className="text-2xl  bg-white rounded-full mr-2" />
+        Login con Google
+      </button>
 
-    <button
-      type="button" 
-      onClick={onFacebookClick}
-      className="mt-6 flex items-center justify-center w-full bg-blue-700 text-white px-7 py-3 uppercase text-sm font-medium hover:bg-blue-800 active:bg-blue-900 shadow-md hover:shadow-lg active:shadow-lg transition duration-150 ease-in-out rounded"
-    >
-      <GrFacebook className="text-2xl  bg-blue rounded-full mr-2" />
-      Login con Facebook
-    </button>
+      <button
+        type="button"
+        onClick={onFacebookClick}
+        className="mt-6 flex items-center justify-center w-full bg-blue-700 text-white px-7 py-3 uppercase text-sm font-medium hover:bg-blue-800 active:bg-blue-900 shadow-md hover:shadow-lg active:shadow-lg transition duration-150 ease-in-out rounded"
+      >
+        <GrFacebook className="text-2xl  bg-blue rounded-full mr-2" />
+        Login con Facebook
+      </button>
     </div>
-  )
+  );
 }
