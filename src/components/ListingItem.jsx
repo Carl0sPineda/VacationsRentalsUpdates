@@ -1,18 +1,20 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React from "react";
+import { Link } from "react-router-dom";
 // import Moment from "react-moment";
-// import { MdLocationOn, MdEdit } from 'react-icons/md'
-import { MdEdit } from 'react-icons/md'
-import { FaTrash } from 'react-icons/fa'
+import { MdEdit } from "react-icons/md";
+import { FaTrash } from "react-icons/fa";
 
 export default function ListingItem({ listing, id, onEdit, onDelete }) {
-
-  function limitText(text) {
-    const words = text.split(' ');
-    if (words.length > 15) {
-      return words.slice(0, 15).join(' ') + '...';
+  function truncarCadena(cadena) {
+    let nuevaCadena = cadena;
+    if (cadena.length > 60) {
+      nuevaCadena = "";
+      for (let i = 0; i < 60; i++) {
+        nuevaCadena += cadena[i];
+      }
+      nuevaCadena += "...";
     }
-    return text;
+    return nuevaCadena;
   }
 
   return (
@@ -21,14 +23,12 @@ export default function ListingItem({ listing, id, onEdit, onDelete }) {
         <Link className="contents" to={`/category/${listing.type}/${id}`}>
           <div className="property-card">
             <figure className="card-banner">
-              {/* <a href="#"> */}
               <img
                 loading="lazy"
                 src={listing.imgUrls[0]}
                 alt="propiedad"
                 className="w-100"
               />
-              {/* </a> */}
               <div className="card-badge green">Se Alquila</div>
               <div className="banner-actions">
                 <button className="banner-actions-btn">
@@ -45,10 +45,8 @@ export default function ListingItem({ listing, id, onEdit, onDelete }) {
               <div className="card-price">
                 <strong>${listing.regularPrice}</strong>/Noche
               </div>
-              {/* <h3 className="h3 card-title">
-          <a href="#">Posee increibles vistas</a>
-        </h3> */}
-              <p className="card-text">{limitText(listing.description)}</p>
+
+              <p className="card-text">{truncarCadena(listing.description)}</p>
               <ul className="card-list">
                 <li className="card-item">
                   <strong>{listing.bedrooms}</strong>
@@ -61,11 +59,6 @@ export default function ListingItem({ listing, id, onEdit, onDelete }) {
                   <ion-icon name="man-outline"></ion-icon>
                   <span>Baños</span>
                 </li>
-                {/* <li className="card-item">
-              <strong>1500</strong>
-              <ion-icon name="square-outline"></ion-icon>
-              <span>m2</span>
-            </li> */}
               </ul>
             </div>
           </div>
@@ -88,5 +81,5 @@ export default function ListingItem({ listing, id, onEdit, onDelete }) {
         </div>
       </li>
     </>
-  )
+  );
 }
