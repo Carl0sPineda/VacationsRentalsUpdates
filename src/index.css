@@ -15,21 +15,9 @@ body {
   background: #ffffff !important
 }
 
-/*-----------------------------------*\
-  #style.css
-\*-----------------------------------*/
-
-/**
- * copyright 2022 codewithsadee
- */
 
 
 
-
-
-/*-----------------------------------*\
-  #CUSTOM PROPERTY
-\*-----------------------------------*/
 
 :root {
 
@@ -217,12 +205,12 @@ a {
 
 .btn {
   position: relative;
-  background: var(--orange-soda);
+  background: #078169;
   color: var(--white);
   font-family: var(--ff-poppins);
   font-size: var(--fs-5);
   text-transform: var(--text-transform, capitalize);
-  border: 1px solid var(--orange-soda);
+  border: 1px solid #078169;
   padding: 10px 20px;
   z-index: 1;
 }
@@ -254,11 +242,11 @@ a {
 }
 
 .section-subtitle {
-  color: var(--orange-soda);
+  color: white;
   font-size: var(--fs-5);
   font-weight: var(--fw-600);
   padding: 5px 20px;
-  background: hsla(9, 100%, 62%, 0.1);
+  background: #078169;
   width: max-content;
   border-radius: 50px;
   margin-inline: auto;
@@ -336,7 +324,7 @@ a {
 }
 
 .header-top {
-  background: var(--prussian-blue);
+  background: black;
   padding-block: 15px;
 }
 
@@ -366,12 +354,12 @@ a {
   gap: 5px;
 }
 
-.header-top-link:is(:hover, :focus) {
-  color: var(--orange-soda);
-}
+/* .header-top-link:is(:hover, :focus) {
+  color:#078169;
+} */
 
 .header-top-link ion-icon {
-  color: var(--orange-soda);
+  color: white;
   font-size: 15px;
   --ionicon-stroke-width: 60px;
 }
@@ -396,7 +384,7 @@ a {
 }
 
 .header-top-btn {
-  background: var(--orange-soda);
+  background: #078169;
   color: var(--white);
   font-size: var(--fs-6);
   font-weight: var(--fw-700);
@@ -542,7 +530,7 @@ a {
 }
 
 .hero-subtitle ion-icon {
-  color: var(--orange-soda);
+  color: #078169;
 }
 
 .hero-subtitle span {
@@ -695,9 +683,9 @@ a {
   margin-bottom: 15px;
 }
 
-.service-card .card-title>a:is(:hover, :focus) {
+/* .service-card .card-title>a:is(:hover, :focus) {
   color: var(--orange-soda);
-}
+} */
 
 .service-card .card-text {
   color: var(--cadet);
@@ -716,9 +704,9 @@ a {
   gap: 5px;
 }
 
-.service-card:is(:hover, :focus) .card-link {
+/* .service-card:is(:hover, :focus) .card-link {
   color: var(--orange-soda);
-}
+} */
 
 .service-card::after {
   content: "";
@@ -727,7 +715,7 @@ a {
   left: 0;
   width: 0;
   height: 4px;
-  background: var(--orange-soda);
+  /* background: var(--orange-soda); */
   transition: var(--transition);
 }
 
@@ -820,7 +808,7 @@ a {
 }
 
 .card-price {
-  color: var(--orange-soda);
+  color: #078169;
   font-family: var(--ff-poppins);
   font-size: var(--fs-5);
   margin-bottom: 5px;
@@ -977,12 +965,12 @@ a {
 }
 
 .features-card:is(:hover, :focus) {
-  background: var(--orange-soda);
+  background: #078169;
 }
 
 .features-card .card-icon {
-  background: var(--seashell);
-  color: var(--orange-soda);
+  background: ghostwhite;
+  color: #078169;
   width: 60px;
   height: 60px;
   display: grid;
@@ -1025,9 +1013,9 @@ a {
   transition: var(--transition);
 }
 
-.features-card:is(:hover, :focus) .card-btn {
+/* .features-card:is(:hover, :focus) .card-btn {
   color: var(--orange-soda);
-}
+} */
 
 
 
@@ -1270,7 +1258,7 @@ a {
 }
 
 .copyright {
-  font-size: var(--fs-5);
+  font-size: 1rem;
   text-align: center;
 }
 
@@ -1917,3 +1905,40 @@ a {
   background-image: url(../src/assets/search.svg);
   background-size: 20px 30px;
 } 
+
+
+.coc{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.te{
+  background-color: #fff;
+  font-family: "Incosolata", Consolas,monospace;
+  font-size: 1.5em;
+  color:  var(--cadet);;
+}
+/* .typewriter{
+  position: relative;
+}
+.typewriter::after{
+  content: '|';
+  position: absolute;
+  right: 0;
+  color: gray;
+  background-color: #fff;
+  width:  100%;
+  animation: typing 3s steps(22) alternate infinite,
+              line 1s infinite;
+}
+@keyframes typing{
+  to{
+      width: 0%;
+  }
+}
+@keyframes line {
+  50%{
+      color: transparent;
+  }
+} */
