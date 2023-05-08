@@ -1,6 +1,7 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { AiFillPhone } from "react-icons/ai";
 import logo from "../assets/1.png";
 
 export default function Header() {
@@ -31,14 +32,15 @@ export default function Header() {
               <a
                 href="mailto:vacationsreantals@gmail.com"
                 className="header-top-link"
+                target="_blank"
               >
                 <ion-icon name="mail-outline"></ion-icon>
-                <span>vacationsrentals@gmail.com</span>
+                <span>reservations@vacationsrentalscostarica.com</span>
               </a>
             </li>
 
             <li>
-              <a href="#" className="header-top-link">
+              <a className="header-top-link">
                 <ion-icon name="location-outline"></ion-icon>
                 <address>Liberia, Guanacaste</address>
               </a>
@@ -51,6 +53,7 @@ export default function Header() {
                 <a
                   href="https://www.facebook.com/vacationrentalscr/?paipv=0&eav=AfaLzRmivYtEYnd9-KvNHdJF-zV_p9KWy_lYGrrgSFnmsANzxgomnLVY-QMf-dtfLjo&_rdr"
                   className="header-top-social-link"
+                  target="_blank"
                 >
                   <ion-icon name="logo-facebook"></ion-icon>
                 </a>
@@ -60,13 +63,19 @@ export default function Header() {
                 <a
                   href="https://www.instagram.com/vacationscostarica/?hl=es"
                   className="header-top-social-link"
+                  target="_blank"
                 >
                   <ion-icon name="logo-instagram"></ion-icon>
                 </a>
               </li>
+              {/* <li>
+                <a className="header-top-social-link header-top-btn">
+                  Contacto 7139 4438 <AiFillPhone />
+                </a>
+              </li> */}
             </ul>
 
-            <button className="header-top-btn">Contacto</button>
+            <a className="header-top-btn">Contacto 7139 4438</a>
           </div>
         </div>
       </div>
@@ -80,37 +89,43 @@ export default function Header() {
             onClick={()=>navigate("/")}
             /> */}
           {/* <BsFillHouseFill className="ml-1 text-red-500  w-6 h-5" /> */}
-          <img src={logo} className="filter filter-red w-400 h-20" />
-          <h2 className="hidden sm:block font-semibold text-xl cursor-pointer">
-            VacationsRentalsCR
-          </h2>
+          <img
+            src={logo}
+            className="filter filter-red w-400 h-20 cursor-pointer"
+          />
+          <div className="coc">
+            <h2 className="typewriter te hidden sm:block font-semibold text-xl cursor-pointer">
+              Vacation Rentals
+            </h2>
+          </div>
         </div>
         <div>
           <ul className="flex space-x-10 mr-4">
             <li
-              className={`cursor-pointer py-3 text-sm font-semibold
+              className={`cursor-pointer py-3 text-base font-semibold
                  text-gray-400 border-b-[3px] border-b-transparent hover:scale-105
-                 ${pathMathRoute("/") && "text-black border-b-red-500"}`}
+                 ${pathMathRoute("/") && "text-black border-b-[#078169]"}`}
               onClick={() => navigate("/")}
             >
               Inicio
             </li>
             <li
-              className={`cursor-pointer py-3 text-sm font-semibold
-                 text-gray-400 border-b-[3px] border-b-transparent hover:scale-105
+              className={`cursor-pointer py-3 text-base font-semibold
+                 text-gray-400 border-b-[3px]  border-b-transparent hover:scale-105
                  ${
-                   pathMathRoute("/properties") && "text-black border-b-red-500"
+                   pathMathRoute("/properties") &&
+                   "text-black border-b-[#078169]"
                  }`}
               onClick={() => navigate("/properties")}
             >
               Propiedades
             </li>
             <li
-              className={`cursor-pointer py-3 text-sm font-semibold
+              className={`cursor-pointer py-3 text-base font-semibold
                  text-gray-400 border-b-[3px] border-b-transparent hover:scale-105
                  ${
                    (pathMathRoute("/sign-in") || pathMathRoute("/profile")) &&
-                   "text-black border-b-red-500"
+                   "text-black border-b-[#078169]"
                  }`}
               onClick={() => navigate("/profile")}
             >
