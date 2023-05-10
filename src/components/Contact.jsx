@@ -28,7 +28,12 @@ export default function Contact({ userRef, listing }) {
     const templateParams = {
       user_name: values.name,
       user_email: values.email,
-      message: `Nombre: ${values.name}\nEmail: ${values.email}\nTelefono: ${values.phone}\nCantidad de personas: ${values.persons}\nFecha inicio: ${values.startDate}\nFecha fin: ${values.endDate}\n\nPropiedad solicitada: ${currentURL}`,
+      phone: values.phone,
+      persons: values.persons,
+      startDate: values.startDate,
+      endDate: values.endDate,
+      currentURL: currentURL,
+      // message: `Nombre: ${values.name}\nEmail: ${values.email}\nTelefono: ${values.phone}\nCantidad de personas: ${values.persons}\nFecha inicio: ${values.startDate}\nFecha fin: ${values.endDate}\n\nPropiedad solicitada: ${currentURL}`,
     };
     emailjs
       .send(
