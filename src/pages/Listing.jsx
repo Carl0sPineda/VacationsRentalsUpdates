@@ -8,6 +8,8 @@ import {
   onSnapshot,
   orderBy,
   query,
+  setDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
@@ -22,15 +24,8 @@ import SwiperCore, {
 } from "swiper";
 import { v4 as uuidv4 } from "uuid";
 import "swiper/css/bundle";
-import {
-  // FaShare,
-  FaMapMarkerAlt,
-  FaBed,
-  FaBath,
-  // FaParking,
-  // FaChair,
-  FaUserCircle,
-} from "react-icons/fa";
+import { FaMapMarkerAlt, FaBed, FaBath, FaUserCircle } from "react-icons/fa";
+import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { getAuth } from "firebase/auth";
 import Contact from "../components/Contact";
 import {
@@ -52,7 +47,8 @@ export default function Listing() {
   const [loading, setLoading] = useState(true);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
-  // const [shareLinkCopied, setShareLinkCopied] = useState(false);
+  const [likes, setLikes] = useState([]);
+  const [hasLiked, setHasLiked] = useState(false);
   const [contactLandlord, setContactLandlord] = useState(true);
   const [expanded, setExpanded] = useState(false);
   const MAX_CHARACTERS = 200;
@@ -102,29 +98,45 @@ export default function Listing() {
     // console.log(params.listingId);
   };
 
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      collection(db, "listings", params.listingId, "likes"),
+      (snapshot) => setLikes(snapshot.docs)
+    );
+  }, [db, params.listingId]);
+
+  useEffect(() => {
+    setHasLiked(
+      likes.findIndex((like) => like.id === auth.currentUser.uid) !== -1
+    );
+  }, [likes]);
+
+  async function likePost() {
+    try {
+      if (hasLiked) {
+        await deleteDoc(
+          doc(db, "listings", params.listingId, "likes", auth.currentUser.uid)
+        );
+      } else {
+        await setDoc(
+          doc(db, "listings", params.listingId, "likes", auth.currentUser.uid),
+          {
+            username: auth.currentUser.displayName,
+          }
+        );
+      }
+    } catch (error) {
+      // Manejar el error aquí
+      toast.error("Debes iniciar sesión antes");
+    }
+  }
+
   if (loading) {
     return <Spinner />;
   }
 
   return (
     <main>
-      {/* <div
-        className="fixed top-[13%] right-[3%] z-10 bg-white cursor-pointer border-2 border-gray-400 rounded-full w-12 h-12 flex justify-center items-center"
-        onClick={() => {
-          navigator.clipboard.writeText(window.location.href);
-          setShareLinkCopied(true);
-          setTimeout(() => {
-            setShareLinkCopied(false);
-          }, 2000);
-        }}
-      >
-        <FaShare className="text-lg text-slate-500" />
-      </div>
-      {shareLinkCopied && (
-        <p className="fixed top-[23%] right-[5%] font-semibold border-2 border-gray-400 rounded-md bg-white z-10 p-2">
-          Link Copied
-        </p>
-      )} */}
       <div className="m-4 flex flex-col md:flex-row max-w-7xl lg:mx-auto p-4 rounded-lg shadow-lg bg-white lg:space-x-3">
         <div className="w-full overflow-x-hidden mt-6 md:mt-0 md:ml-2">
           <Swiper
@@ -170,12 +182,6 @@ export default function Listing() {
               {" "}
               {listing.type === "rent" ? "Se renta" : "Sale"}{" "}
             </p>
-
-            {/* {listing.offer && (
-              <p className="w-full max-w-[200px] bg-green-800 rounded-md p-1 text-white text-center font-semibold shadow-md">
-                ${+listing.regularPrice - +listing.discountedPrice} discount
-              </p>
-            )} */}
           </div>
 
           <ul className="flex mt-4 items-center space-x-2 sm:space-x-10 text-sm font-semibold mb-6">
@@ -188,6 +194,20 @@ export default function Listing() {
             <li className="flex items-center whitespace-nowrap">
               <FaBath className="text-lg mr-1" />
               {+listing.bathroms > 1 ? `${listing.bathroms} Baños` : "1 Baño"}
+            </li>
+            <li className="flex items-center whitespace-nowrap">
+              {hasLiked ? (
+                <AiFillHeart
+                  onClick={likePost}
+                  className="text-red-400 h-7 w-7 hover:scale-125 transition-transform duration-200 ease-out cursor-pointer mr-2"
+                />
+              ) : (
+                <AiOutlineHeart
+                  onClick={likePost}
+                  className="hover:scale-125 h-7 w-7 transition-transform duration-200 ease-out cursor-pointer mr-2"
+                />
+              )}
+              {likes.length}
             </li>
           </ul>
 
@@ -218,17 +238,6 @@ export default function Listing() {
               </button>
             )}
           </p>
-
-          {/* {listing.userRef !== auth.currentUser?.uid && !contactLandlord && (
-            <div className="mt-6">
-              <button
-                onClick={() => setContactLandlord(true)}
-                className="px-7 py-3 bg-slate-900 text-white font-medium text-sm uppercase rounded shadow-md hover:bg-slate-700 hover:shadow-lg focus:bg-slate-700 focus:shadow-lg w-full text-center transition duration-150 ease-in-out "
-              >
-                Contacto
-              </button>
-            </div>
-          )} */}
           {contactLandlord && (
             <Contact userRef={listing.userRef} listing={listing} />
           )}
