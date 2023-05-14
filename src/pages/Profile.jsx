@@ -13,7 +13,6 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { db } from "../firebase";
-import { FcHome } from "react-icons/fc";
 import { BiListPlus } from "react-icons/bi";
 import ListingItem from "../components/ListingItem";
 import Swal from "sweetalert2";
@@ -84,31 +83,16 @@ export default function Profile() {
     fectchUserListings();
   }, [auth.currentUser.uid]);
 
-  //Codigo base
-  //  async function onDelete(listingID){
-  //   if(window.confirm ('Are you sure you want to delete?')){
-  //     await deleteDoc(doc(db,'listings', listingID))
-  //     const updatedListings = listings.filter(
-  //       (listing)=>listing.id !== listingID
-  //     )
-  //     setListings(updatedListings)
-  //     toast.success('Successfully deleted the listing')
-  //   }
-  //  }
-
   async function onDelete(listingID) {
     Swal.fire({
-      title: "Quieres continuar?",
-      text: "Se eliminará de forma permanente!",
-      width: 350,
+      title: "¿Estás seguro?",
+      text: "Se eliminará de forma permanente.",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#166534",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Eliminar",
-      customClass: {
-        confirmButton: "btn-confirm-class",
-        cancelButton: "btn-cancel-class",
-      },
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#000000",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
     }).then(async (result) => {
       if (result.value) {
         await deleteDoc(doc(db, "listings", listingID));
@@ -208,7 +192,7 @@ export default function Profile() {
           ) : null}
         </div>
       </section>
-      <div className="max-w-6xl px-3 mt-6 mx-auto">
+      <div className="max-w-1xl px-3 mt-6 mx-auto">
         {!loading && listings.length > 0 && (
           <>
             <h2 className="text-2xl text-center font-semibold mb-6">
