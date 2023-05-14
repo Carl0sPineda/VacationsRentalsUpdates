@@ -7,17 +7,11 @@ import {
   where,
 } from "firebase/firestore";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { GiShakingHands } from "react-icons/gi";
 import { FaHandshake, FaHouseUser } from "react-icons/fa";
-import { BsFillHouseAddFill, BsHouseCheckFill } from "react-icons/bs";
 import ListingItem from "../components/ListingItem";
-import Slider from "../components/Slider";
 import { db } from "../firebase";
-import banner from "../assets/banner.png";
 import ejmcasa from "../assets/ejmcasa.jpg";
-import servicio1 from "../assets/servicio-1.png";
-import servicio2 from "../assets/servicio-2.png";
+import Swal from "sweetalert2";
 
 export default function Home() {
   //Offers
@@ -86,37 +80,18 @@ export default function Home() {
     fetchListings();
   }, []);
 
-  //places for rent
-  const [saleListings, setSaleListings] = useState(null);
-  useEffect(() => {
-    async function fetchListings() {
-      try {
-        //get reference
-        const listingRef = collection(db, "listings");
-        //create the query
-        const q = query(
-          listingRef,
-          where("type", "==", "sale"),
-          orderBy("timestamp", "desc"),
-          limit(4)
-        );
-        //execute the query
-        const querySnap = await getDocs(q);
-        const listings = [];
-        querySnap.forEach((doc) => {
-          return listings.push({
-            id: doc.id,
-            data: doc.data(),
-          });
-        });
-        setSaleListings(listings);
-        // console.log(listings);
-      } catch (error) {
-        // console.log(error);
-      }
-    }
-    fetchListings();
-  }, []);
+  const handleClick = () => {
+    Swal.fire({
+      title: "<h2 class='text-slate-900 text-2xl'>Misión</h2>",
+      html: "<p class='text-left hero-text'>Somos una empresa que se dedica a satisfacer la estadía de costarricenses y extranjeros en los mejores destinos turísticos de Costa Rica principalmente en la provincia de Guanacaste. Buscamos ser una empresa consolidada, enfocada a satisfacer las necesidades de los vacacionistas proveyendo el mejor servicio,calidad a nuestros clientes. </p>",
+      confirmButtonText: "Cerrar",
+      didOpen: () => {
+        const confirmButton = Swal.getConfirmButton();
+        confirmButton.style.backgroundColor = "#078169";
+        confirmButton.style.color = "white";
+      },
+    });
+  };
 
   return (
     <>
@@ -140,7 +115,9 @@ export default function Home() {
                   el territorio de Guanacaste.
                 </p>
 
-                <button className="btn">Mas información</button>
+                <button className="btn" onClick={handleClick}>
+                  Mas información
+                </button>
               </div>
 
               <figure className="hero-banner">
