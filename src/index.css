@@ -798,9 +798,9 @@ a {
   margin-right: auto;
 }
 
-.banner-actions-btn:is(:hover, :focus) {
-  color: var(--orange-soda);
-}
+/* .banner-actions-btn:is(:hover, :focus) {
+  color:#078169;
+} */
 
 .property-card .card-content {
   padding: 30px 15px 15px;
