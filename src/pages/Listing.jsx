@@ -107,7 +107,7 @@ export default function Listing() {
 
   useEffect(() => {
     setHasLiked(
-      likes.findIndex((like) => like.id === auth.currentUser.uid) !== -1
+      likes.findIndex((like) => like.id === auth.currentUser?.uid) !== -1
     );
   }, [likes]);
 
@@ -115,11 +115,11 @@ export default function Listing() {
     try {
       if (hasLiked) {
         await deleteDoc(
-          doc(db, "listings", params.listingId, "likes", auth.currentUser.uid)
+          doc(db, "listings", params.listingId, "likes", auth.currentUser?.uid)
         );
       } else {
         await setDoc(
-          doc(db, "listings", params.listingId, "likes", auth.currentUser.uid),
+          doc(db, "listings", params.listingId, "likes", auth.currentUser?.uid),
           {
             username: auth.currentUser.displayName,
           }
