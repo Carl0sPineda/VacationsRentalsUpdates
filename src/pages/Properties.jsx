@@ -57,32 +57,9 @@ export default function Properties() {
     fetchListings();
   }, []);
 
-  // async function onFetchMoreListings() {
-  //   try {
-  //     const listingRef = collection(db, "listings");
-  //     const q = query(
-  //       listingRef,
-  //       where("type", "==", "rent"),
-  //       orderBy("timestamp", "desc"),
-  //       startAfter(lastFetchedListing),
-  //       limit(4)
-  //     );
-  //     const querySnap = await getDocs(q);
-  //     const lastVisible = querySnap.docs[querySnap.docs.length - 1];
-  //     setLastFetchListing(lastVisible);
-  //     const listings = [];
-  //     querySnap.forEach((doc) => {
-  //       return listings.push({
-  //         id: doc.id,
-  //         data: doc.data(),
-  //       });
-  //     });
-  //     setListings((prevState)=>[...prevState, ...listings]);
-  //     setLoading(false);
-  //   } catch (error) {
-  //     toast.error("Could not fetch listing");
-  //   }
-  // }
+  if (loading) {
+    return <Spinner />;
+  }
 
   return (
     <div className="sm:mr-3 sm:ml-5 pt-4 space-y-6 mt-8">
@@ -177,9 +154,7 @@ export default function Properties() {
         </div>
       </div>
 
-      {loading ? (
-        <Spinner />
-      ) : listings && listings.length > 0 ? (
+      {listings && listings.length > 0 ? (
         <>
           <main>
             {listings
@@ -367,17 +342,6 @@ export default function Properties() {
               </p>
             )}
           </main>
-
-          {/* {lastFetchedListing && (
-            <div className="flex justify-center items-center">
-              <button
-                onClick={onFetchMoreListings}
-                className="bg-white px-3 py-1.5 text-gray-700 border border-gray-300 mb-6 mt-6 hover:border-slate-600 rounded transition duration-150 ease-in-out"
-              >
-                Load more
-              </button>
-            </div>
-          )} */}
         </>
       ) : (
         <p>No se encuentran propiedades registradas actualmente</p>

@@ -16,6 +16,7 @@ import { db } from "../firebase";
 import { BiListPlus } from "react-icons/bi";
 import ListingItem from "../components/ListingItem";
 import Swal from "sweetalert2";
+import Spinner from "../components/Spinner";
 
 export default function Profile() {
   const auth = getAuth();
@@ -107,6 +108,10 @@ export default function Profile() {
 
   function onEdit(listingID) {
     navigate(`/edit-listing/${listingID}`);
+  }
+
+  if (loading) {
+    return <Spinner />;
   }
 
   return (

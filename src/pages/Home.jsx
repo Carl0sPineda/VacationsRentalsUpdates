@@ -12,41 +12,14 @@ import ListingItem from "../components/ListingItem";
 import { db } from "../firebase";
 import ejmcasa from "../assets/ejmcasa.jpg";
 import Swal from "sweetalert2";
+import Spinner from "../components/Spinner";
 
 export default function Home() {
   //Offers
   const [offerListings, setOfferListings] = useState(null);
+  const [loading, setLoading] = useState(true);
   const date = new Date(); // crea un objeto Date con la fecha actual
   const year = date.getFullYear(); // obtiene el año actual del objeto Date
-  useEffect(() => {
-    async function fetchListings() {
-      try {
-        //get reference
-        const listingRef = collection(db, "listings");
-        //create the query
-        const q = query(
-          listingRef,
-          where("offer", "==", true),
-          orderBy("timestamp", "desc"),
-          limit(4)
-        );
-        //execute the query
-        const querySnap = await getDocs(q);
-        const listings = [];
-        querySnap.forEach((doc) => {
-          return listings.push({
-            id: doc.id,
-            data: doc.data(),
-          });
-        });
-        setOfferListings(listings);
-        // console.log(listings);
-      } catch (error) {
-        // console.log(error);
-      }
-    }
-    fetchListings();
-  }, []);
 
   //places for rent
   const [rentListings, setRentListings] = useState(null);
@@ -72,6 +45,7 @@ export default function Home() {
           });
         });
         setRentListings(listings);
+        setLoading(false);
         // console.log(listings);
       } catch (error) {
         // console.log(error);
@@ -92,6 +66,10 @@ export default function Home() {
       },
     });
   };
+
+  if (loading) {
+    return <Spinner />;
+  }
 
   return (
     <>
