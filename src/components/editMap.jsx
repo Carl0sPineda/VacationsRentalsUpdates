@@ -1,15 +1,23 @@
-import { useEffect } from 'react'
-import { toast } from 'react-toastify'
-import { v4 as uuidv4 } from 'uuid'
-import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect } from "react";
+import { toast } from "react-toastify";
+import { v4 as uuidv4 } from "uuid";
+import { useNavigate, useParams } from "react-router-dom";
 import L from "leaflet";
-import "leaflet-fullscreen/dist/leaflet.fullscreen.css"; 
+import "leaflet-fullscreen/dist/leaflet.fullscreen.css";
 import "leaflet/dist/leaflet.css";
 import "leaflet-control-geocoder/dist/Control.Geocoder.css";
 import "leaflet-control-geocoder";
-import 'leaflet-fullscreen';
+import "leaflet-fullscreen";
+import houseIcon from "../assets/map-pointer.svg";
 
 export default function MapEdit({ geolocation, setGeolocation }) {
+  const icon = L.icon({
+    iconUrl: houseIcon,
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
+    popupAnchor: [0, -40],
+  });
+
   useEffect(() => {
     const map = L.map("mapid").setView([geolocation.lat, geolocation.lng], 15);
     const osmLayer = L.tileLayer(
@@ -24,14 +32,18 @@ export default function MapEdit({ geolocation, setGeolocation }) {
         attribution: "Esri",
       }
     );
+
     osmLayer.addTo(map);
     const baseLayers = {
       "Por defecto": osmLayer,
       Satelite: esriLayer,
     };
+
     const marker = L.marker([geolocation.lat, geolocation.lng], {
       draggable: true,
+      icon: icon,
     }).addTo(map);
+
     marker.on("dragend", async function (e) {
       const { lat, lng } = e.target.getLatLng();
       setGeolocation({ lat, lng });
@@ -43,19 +55,23 @@ export default function MapEdit({ geolocation, setGeolocation }) {
     });
     const geocoder = L.Control.geocoder({
       defaultMarkGeocode: false,
-    }).on("markgeocode", function (e) {
-      const { center } = e.geocode;
-      marker.setLatLng(center);
-      map.setView(center, 16);
-    }).addTo(map);
+    })
+      .on("markgeocode", function (e) {
+        const { center } = e.geocode;
+        marker.setLatLng(center);
+        map.setView(center, 16);
+      })
+      .addTo(map);
     L.control
       .scale({
         position: "bottomright",
       })
       .addTo(map);
-    L.control.fullscreen({
-       position: "topleft",
-    }).addTo(map);
+    L.control
+      .fullscreen({
+        position: "topleft",
+      })
+      .addTo(map);
     L.control.layers(baseLayers).addTo(map);
 
     // Clean up function to remove the map and marker when the component unmounts
@@ -64,10 +80,11 @@ export default function MapEdit({ geolocation, setGeolocation }) {
     };
   }, [geolocation]);
 
-  
   return (
     <div>
-      <p className="text-lg font-semibold mb-2">Seleccione una ubicación específica</p>
+      <p className="text-lg font-semibold mb-2">
+        Seleccione una ubicación específica
+      </p>
       <div id="mapid" style={{ height: "400px" }}></div>
     </div>
   );

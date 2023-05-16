@@ -38,6 +38,7 @@ import {
 import { toast } from "react-toastify";
 import "leaflet-fullscreen";
 import "leaflet-fullscreen/dist/leaflet.fullscreen.css";
+import houseIcon from "../assets/map-pointer.svg";
 
 export default function Listing() {
   const auth = getAuth();
@@ -130,6 +131,13 @@ export default function Listing() {
       toast.error("Debes iniciar sesión antes");
     }
   }
+
+  const icon = L.icon({
+    iconUrl: houseIcon,
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
+    popupAnchor: [0, -40],
+  });
 
   if (loading) {
     return <Spinner />;
@@ -311,6 +319,7 @@ export default function Listing() {
             </LayersControl>
             <Marker
               position={[listing.geolocation.lat, listing.geolocation.lng]}
+              icon={icon}
             >
               <Popup>{listing.address}</Popup>
             </Marker>
