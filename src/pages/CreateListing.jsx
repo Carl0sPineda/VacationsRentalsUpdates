@@ -18,6 +18,7 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-control-geocoder/dist/Control.Geocoder.css";
 import "leaflet-control-geocoder";
 import "leaflet-fullscreen";
+import houseIcon from "../assets/map-pointer.svg";
 
 export default function CreateListing() {
   const navigate = useNavigate();
@@ -69,6 +70,13 @@ export default function CreateListing() {
     images,
   } = formData;
 
+  const icon = L.icon({
+    iconUrl: houseIcon,
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
+    popupAnchor: [0, -40],
+  });
+
   useEffect(() => {
     const map = L.map("mapid").setView([geolocation.lat, geolocation.lng], 10);
 
@@ -95,6 +103,7 @@ export default function CreateListing() {
 
     const marker = L.marker([geolocation.lat, geolocation.lng], {
       draggable: true,
+      icon: icon,
     }).addTo(map);
 
     marker.on("dragend", async function (e) {
@@ -339,9 +348,9 @@ export default function CreateListing() {
           id="description"
           value={description}
           onChange={onChange}
-          placeholder="Ingrese un descripción detallada del lugar"
+          placeholder="Ingrese un descripción detallada del lugar..."
           required
-          className="w-full px-4 py-2 text-xl text-gray-700
+          className="w-full h-[200px] px-4 py-2 text-xl text-gray-700
             bg-white border border-gray-300 rounded transition
             duration-150 ease-in-out focus:text-gray-700 
             focus:bg-white focus:border-slate-600 mb-6"
