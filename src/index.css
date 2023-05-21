@@ -12,7 +12,7 @@ body {
 }
 
 .swiper-pagination-progressbar .swiper-pagination-progressbar-fill {
-  background: #ffffff !important
+  background: #310c3a !important
 }
 
 .loader, .loader:before, .loader:after {
@@ -995,9 +995,9 @@ a {
   box-shadow: var(--shadow-1);
 }
 
-.features-card:is(:hover, :focus) {
+/* .features-card:is(:hover, :focus) {
   background: #078169;
-}
+} */
 
 .features-card .card-icon {
   background: ghostwhite;
@@ -1023,9 +1023,9 @@ a {
   transition: var(--transition);
 }
 
-.features-card:is(:hover, :focus) .card-title {
+/* .features-card:is(:hover, :focus) .card-title {
   color: var(--white);
-}
+} */
 
 .features-card .card-btn {
   background: var(--white);
@@ -1199,9 +1199,9 @@ a {
   \*-----------------------------------*/
 
 .footer {
-  background: var(--raisin-black-1);
+  background: black;
   color: var(--white);
-  margin-bottom: 68px;
+  /* margin-bottom: 68px; */
 }
 
 .footer .container {
@@ -1284,7 +1284,7 @@ a {
 }
 
 .footer-bottom {
-  background: var(--raisin-black-2);
+  background: black;
   padding-block: 25px;
 }
 
