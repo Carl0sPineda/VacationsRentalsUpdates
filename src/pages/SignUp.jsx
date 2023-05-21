@@ -64,7 +64,7 @@ export default function SignUp() {
 
   return (
     <section>
-      <h1 className="text-3xl text-center mt-6 font-bold">Registrate</h1>
+      {/* <h1 className="text-3xl text-center mt-6 font-bold">Registrate</h1> */}
       <div
         className="flex justify-center flex-wrap items-center
      px-6 py-12 max-w-6xl mx-auto"

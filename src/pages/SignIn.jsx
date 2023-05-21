@@ -42,7 +42,7 @@ export default function SignIn() {
 
   return (
     <section>
-      <h1 className="text-3xl text-center mt-6 font-bold">Login</h1>
+      {/* <h1 className="text-3xl text-center mt-6 font-bold">Login</h1> */}
       <div
         className="flex justify-center flex-wrap items-center
       px-6 py-12 max-w-6xl mx-auto"
@@ -128,7 +128,7 @@ export default function SignIn() {
               Inicia sesión
             </button>
             <div className="flex items-center  my-4 before:border-t before:flex-1 before:border-gray-300 after:border-t after:flex-1 after:border-gray-300">
-              <p className="text-center font-semibold mx-4">OR</p>
+              <p className="text-center font-semibold mx-4">O</p>
             </div>
             <OAuth />
           </form>
