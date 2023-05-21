@@ -39,6 +39,7 @@ import { toast } from "react-toastify";
 import "leaflet-fullscreen";
 import "leaflet-fullscreen/dist/leaflet.fullscreen.css";
 import houseIcon from "../assets/map-pointer.svg";
+import Footer from "../components/Footer";
 
 export default function Listing() {
   const auth = getAuth();
@@ -303,7 +304,7 @@ export default function Listing() {
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             /> */}
-            <LayersControl position="topright">
+            <LayersControl position="topleft">
               <BaseLayer checked name="Por defecto">
                 <TileLayer
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -326,6 +327,7 @@ export default function Listing() {
           </MapContainer>
         </div>
       </div>
+      <Footer />
     </main>
   );
 }

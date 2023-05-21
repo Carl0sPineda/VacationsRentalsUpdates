@@ -13,13 +13,10 @@ import { db } from "../firebase";
 import ejmcasa from "../assets/ejmcasa.jpg";
 import Swal from "sweetalert2";
 import Spinner from "../components/Spinner";
+import Footer from "../components/Footer";
 
 export default function Home() {
-  //Offers
-  const [offerListings, setOfferListings] = useState(null);
   const [loading, setLoading] = useState(true);
-  const date = new Date(); // crea un objeto Date con la fecha actual
-  const year = date.getFullYear(); // obtiene el año actual del objeto Date
 
   //places for rent
   const [rentListings, setRentListings] = useState(null);
@@ -173,10 +170,6 @@ export default function Home() {
                   </div>
 
                   <h3 className="card-title">Parqueo</h3>
-
-                  <div className="card-btn">
-                    <ion-icon name="arrow-forward-outline"></ion-icon>
-                  </div>
                 </li>
 
                 <li className="features-card">
@@ -185,10 +178,6 @@ export default function Home() {
                   </div>
 
                   <h3 className="card-title">Piscina</h3>
-
-                  <div className="card-btn">
-                    <ion-icon name="arrow-forward-outline"></ion-icon>
-                  </div>
                 </li>
 
                 <li className="features-card">
@@ -197,10 +186,6 @@ export default function Home() {
                   </div>
 
                   <h3 className="card-title">Aire Acondicionado</h3>
-
-                  <div className="card-btn">
-                    <ion-icon name="arrow-forward-outline"></ion-icon>
-                  </div>
                 </li>
 
                 <li className="features-card">
@@ -209,10 +194,6 @@ export default function Home() {
                   </div>
 
                   <h3 className="card-title">Wifi</h3>
-
-                  <div className="card-btn">
-                    <ion-icon name="arrow-forward-outline"></ion-icon>
-                  </div>
                 </li>
 
                 <li className="features-card">
@@ -221,10 +202,6 @@ export default function Home() {
                   </div>
 
                   <h3 className="card-title">Biblioteca</h3>
-
-                  <div className="card-btn">
-                    <ion-icon name="arrow-forward-outline"></ion-icon>
-                  </div>
                 </li>
 
                 <li className="features-card">
@@ -233,12 +210,6 @@ export default function Home() {
                   </div>
 
                   <h3 className="card-title">Camas amplias</h3>
-
-                  <div className="card-btn">
-                    <ion-icon name="arrow-forward-outline"></ion-icon>
-                  </div>
-
-                  {/* </a> */}
                 </li>
                 <li className="features-card">
                   <div className="card-icon">
@@ -246,10 +217,6 @@ export default function Home() {
                   </div>
 
                   <h3 className="card-title">Amplio espacio</h3>
-
-                  <div className="card-btn">
-                    <ion-icon name="arrow-forward-outline"></ion-icon>
-                  </div>
                 </li>
 
                 <li className="features-card">
@@ -258,24 +225,11 @@ export default function Home() {
                   </div>
 
                   <h3 className="card-title">Espacios de juego</h3>
-
-                  <div className="card-btn">
-                    <ion-icon name="arrow-forward-outline"></ion-icon>
-                  </div>
                 </li>
               </ul>
             </div>
           </section>
-          <footer className="footer">
-            <div className="footer-bottom">
-              <div className="container">
-                <p className="copyright ">
-                  &copy; VACATIONS RENTALS COSTA RICA {year}. TODOS LOS DERECHOS
-                  RESERVADOS
-                </p>
-              </div>
-            </div>
-          </footer>
+          <Footer />
         </main>
       )}
     </>
