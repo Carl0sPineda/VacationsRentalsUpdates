@@ -26,6 +26,7 @@ import SwiperCore, {
   Navigation,
   Pagination,
 } from "swiper";
+import Footer from "../components/Footer";
 
 export default function EditListing() {
   const navigate = useNavigate();
@@ -243,252 +244,259 @@ export default function EditListing() {
     navigate(`/category/${formDataCopy.type}/${docRef.id}`);
   }
   return (
-    <main className="max-w-md px-2 mx-auto sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-4xl">
-      <h1 className="text-3xl text-center mt-6 font-bold">
-        Formulario editar propiedades
-      </h1>
-      <form onSubmit={onSubmit}>
-        <p className="text-lg mt-6 font-semibold">Dirección</p>
-        <input
-          type="text"
-          id="address"
-          value={address}
-          onChange={onChange}
-          placeholder="Ejm: Liberia, Guanacaste"
-          maxLength="32"
-          minLength="5"
-          required
-          className="w-full px-4 py-2 text-xl text-gray-700
+    <>
+      <main className="max-w-md px-2 mx-auto sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-4xl">
+        <h1 className="text-3xl text-center mt-6 font-bold">
+          Formulario editar propiedades
+        </h1>
+        <form onSubmit={onSubmit}>
+          <p className="text-lg mt-6 font-semibold">Dirección</p>
+          <input
+            type="text"
+            id="address"
+            value={address}
+            onChange={onChange}
+            placeholder="Ejm: Liberia, Guanacaste"
+            maxLength="32"
+            minLength="5"
+            required
+            className="w-full px-4 py-2 text-xl text-gray-700
                     bg-white border border-gray-300 rounded transition
                     duration-150 ease-in-out focus:text-gray-700
                     focus:bg-white focus:border-slate-600 mb-6"
-        />
+          />
 
-        <div>
-          <p className="text-lg font-semibold">Código</p>
-          <input
-            type="text"
-            id="idVisual"
-            value={idVisual}
-            onChange={onChange}
-            required
-            className="w-mid px-4 py-2 text-xl text-gray-700
+          <div>
+            <p className="text-lg font-semibold">Código</p>
+            <input
+              type="text"
+              id="idVisual"
+              value={idVisual}
+              onChange={onChange}
+              required
+              className="w-mid px-4 py-2 text-xl text-gray-700
                             bg-white border border-gray-300 rounded 
                             transition duration-150 ease-in-out
                             focus:text-gray-700 focus:bg-white 
                             focus:border-slate-600 text-center"
-          />
-        </div>
+            />
+          </div>
 
-        <div className="flex space-x-6 mb-6 mt-5">
-          <div>
-            <p className="text-lg font-semibold">Camas</p>
-            <input
-              type="number"
-              id="bedrooms"
-              value={bedrooms}
-              onChange={onChange}
-              min="1"
-              max="50"
-              required
-              className="w-full px-4 py-2 text-xl text-gray-700
+          <div className="flex space-x-6 mb-6 mt-5">
+            <div>
+              <p className="text-lg font-semibold">Camas</p>
+              <input
+                type="number"
+                id="bedrooms"
+                value={bedrooms}
+                onChange={onChange}
+                min="1"
+                max="50"
+                required
+                className="w-full px-4 py-2 text-xl text-gray-700
                             bg-white border border-gray-300 rounded
                             transition duration-150 ease-in-out
                             focus:text-gray-700 focus:bg-white
                             focus:border-slate-600 text-center"
-            />
-          </div>
+              />
+            </div>
 
-          <div>
-            <p className="text-lg font-semibold">Baños</p>
-            <input
-              type="number"
-              id="bathroms"
-              value={bathroms}
-              onChange={onChange}
-              min="1"
-              max="50"
-              required
-              className="w-full px-4 py-2 text-xl text-gray-700
+            <div>
+              <p className="text-lg font-semibold">Baños</p>
+              <input
+                type="number"
+                id="bathroms"
+                value={bathroms}
+                onChange={onChange}
+                min="1"
+                max="50"
+                required
+                className="w-full px-4 py-2 text-xl text-gray-700
                             bg-white border border-gray-300 rounded
                             transition duration-150 ease-in-out
                             focus:text-gray-700 focus:bg-white
                             focus:border-slate-600 text-center"
-            />
+              />
+            </div>
           </div>
-        </div>
 
-        <p className="text-lg font-semibold">Descripción</p>
-        <textarea
-          type="text"
-          id="description"
-          value={description}
-          onChange={onChange}
-          required
-          className="w-full h-[200px] px-4 py-2 text-xl text-gray-700
+          <p className="text-lg font-semibold">Descripción</p>
+          <textarea
+            type="text"
+            id="description"
+            value={description}
+            onChange={onChange}
+            required
+            className="w-full h-[200px] px-4 py-2 text-xl text-gray-700
                     bg-white border border-gray-300 rounded transition
                     duration-150 ease-in-out focus:text-gray-700
                     focus:bg-white focus:border-slate-600 mb-6"
-        />
+          />
 
-        <div className="flex items-center mb-6">
-          <div className="">
-            <p className="text-lg font-semibold">Precio temporada baja</p>
-            <div className="flex w-full justify-center items-center space-x-6">
-              <input
-                type="number"
-                id="regularPrice"
-                value={regularPrice}
-                onChange={onChange}
-                min="50"
-                max="400000000"
-                required
-                className="w-full px-4
+          <div className="flex items-center mb-6">
+            <div className="">
+              <p className="text-lg font-semibold">Precio temporada baja</p>
+              <div className="flex w-full justify-center items-center space-x-6">
+                <input
+                  type="number"
+                  id="regularPrice"
+                  value={regularPrice}
+                  onChange={onChange}
+                  min="50"
+                  max="400000000"
+                  required
+                  className="w-full px-4
                                 py-2 text-xl text-gray-700 bg-white border
                                 border-gray-300 rounded transition duration-150
                                 ease-in-out focus:text-gray-700 focus:bg-white
                                 focus:border-slate-600 text-center"
-              />
-              {type === "rent" && (
-                <div className="">
-                  <p
-                    className="text-md w-full
+                />
+                {type === "rent" && (
+                  <div className="">
+                    <p
+                      className="text-md w-full
                                     whitespace-nowrap"
-                  >
-                    $ / Noche
-                  </p>
-                </div>
-              )}
+                    >
+                      $ / Noche
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="flex items-center mb-6">
-          <div className="">
-            <p className="text-lg font-semibold">Precio temporada alta</p>
-            <div className="flex w-full justify-center items-center space-x-6">
-              <input
-                type="number"
-                id="highPrice"
-                value={highPrice}
-                onChange={onChange}
-                min="50"
-                max="400000000"
-                required
-                className="w-full px-4
+          <div className="flex items-center mb-6">
+            <div className="">
+              <p className="text-lg font-semibold">Precio temporada alta</p>
+              <div className="flex w-full justify-center items-center space-x-6">
+                <input
+                  type="number"
+                  id="highPrice"
+                  value={highPrice}
+                  onChange={onChange}
+                  min="50"
+                  max="400000000"
+                  required
+                  className="w-full px-4
                                 py-2 text-xl text-gray-700 bg-white border
                                 border-gray-300 rounded transition duration-150
                                 ease-in-out focus:text-gray-700 focus:bg-white
                                 focus:border-slate-600 text-center"
-              />
+                />
 
-              {type === "rent" && (
-                <div className="">
-                  <p className="text-md w-full whitespace-nowrap">$ / Noche</p>
-                </div>
-              )}
+                {type === "rent" && (
+                  <div className="">
+                    <p className="text-md w-full whitespace-nowrap">
+                      $ / Noche
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="flex items-center mb-6">
-          <div className="">
-            <p className="text-lg font-semibold">Precio temporada premiun</p>
-            <div className="flex w-full justify-center items-center space-x-6">
-              <input
-                type="number"
-                id="premiunPrice"
-                value={premiunPrice}
-                onChange={onChange}
-                min="50"
-                max="400000000"
-                required
-                className="w-full px-4
+          <div className="flex items-center mb-6">
+            <div className="">
+              <p className="text-lg font-semibold">Precio temporada premiun</p>
+              <div className="flex w-full justify-center items-center space-x-6">
+                <input
+                  type="number"
+                  id="premiunPrice"
+                  value={premiunPrice}
+                  onChange={onChange}
+                  min="50"
+                  max="400000000"
+                  required
+                  className="w-full px-4
                                 py-2 text-xl text-gray-700 bg-white border
                                 border-gray-300 rounded transition duration-150
                                 ease-in-out focus:text-gray-700 focus:bg-white
                                 focus:border-slate-600 text-center"
-              />
+                />
 
-              {type === "rent" && (
-                <div className="">
-                  <p className="text-md w-full whitespace-nowrap">$ / Noche</p>
-                </div>
-              )}
+                {type === "rent" && (
+                  <div className="">
+                    <p className="text-md w-full whitespace-nowrap">
+                      $ / Noche
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="mb-6">
-          <p className="text-lg font-semibold">
-            Ingrese las nuevas imagenes de la Propiedad
-          </p>
-          <p className="text-gray-600">La primera será la portada (max 6)</p>
-          <input
-            type="file"
-            id="images"
-            onChange={onChange}
-            accept=".jpg,.png,.jpeg"
-            multiple
-            required
-            className="w-full px-3 py-1.5 text-gray-700
+          <div className="mb-6">
+            <p className="text-lg font-semibold">
+              Ingrese las nuevas imagenes de la Propiedad
+            </p>
+            <p className="text-gray-600">La primera será la portada (max 6)</p>
+            <input
+              type="file"
+              id="images"
+              onChange={onChange}
+              accept=".jpg,.png,.jpeg"
+              multiple
+              required
+              className="w-full px-3 py-1.5 text-gray-700
                         bg-white border border-gray-300 rounded
                         transition duration-150 ease-in-out
                         focus:bg-white focus:border-slate-600"
-          />
-          <div
-            className="form-group multi-preview md:w-[100%] lg:w-[94%] mt-3  mb-12 md:mb-6"
-            style={{ display: "flex", flexWrap: "nowrap" }}
-          >
-            <ul className="has-scrollbar">
-              {selectedImage &&
-                Array.from(selectedImage).map((image, index) => (
-                  <img
-                    className="rounded-2xl transition-transform duration-300 transform hover:scale-105 hover:shadow-lg"
-                    key={index}
-                    src={URL.createObjectURL(image)}
-                    alt={`Image ${index}`}
-                    style={{
-                      maxWidth: "100%",
-                      height: "220px",
-                      marginRight: "10px",
-                    }}
-                  />
-                ))}
-            </ul>
+            />
+            <div
+              className="form-group multi-preview md:w-[100%] lg:w-[94%] mt-3  mb-12 md:mb-6"
+              style={{ display: "flex", flexWrap: "nowrap" }}
+            >
+              <ul className="has-scrollbar">
+                {selectedImage &&
+                  Array.from(selectedImage).map((image, index) => (
+                    <img
+                      className="rounded-2xl transition-transform duration-300 transform hover:scale-105 hover:shadow-lg"
+                      key={index}
+                      src={URL.createObjectURL(image)}
+                      alt={`Image ${index}`}
+                      style={{
+                        maxWidth: "100%",
+                        height: "220px",
+                        marginRight: "10px",
+                      }}
+                    />
+                  ))}
+              </ul>
+            </div>
           </div>
-        </div>
 
-        <MapEdit
-          geolocation={geolocation}
-          setGeolocation={setGeolocation}
-          localizacionGuardada={localizacionGuardada}
-          //setFormData={setFormData}
-        />
-        {loading && (
-          <div className="mt-1 mb-1">
-            <span className="font-bold text-cyan-700 text-lg">
-              Actualizando Datos... {progress}%
-            </span>
-            <progress
-              className="bg-gray-300 w-full h-3 rounded-full overflow-hidden"
-              value={progress}
-              max="100"
-            ></progress>
-          </div>
-        )}
-        <button
-          type="submit"
-          className="mx-auto block mb-4 w-[300px] px-4 mt-4
+          <MapEdit
+            geolocation={geolocation}
+            setGeolocation={setGeolocation}
+            localizacionGuardada={localizacionGuardada}
+            //setFormData={setFormData}
+          />
+          {loading && (
+            <div className="mt-1 mb-1">
+              <span className="font-bold text-cyan-700 text-lg">
+                Actualizando Datos... {progress}%
+              </span>
+              <progress
+                className="bg-gray-300 w-full h-3 rounded-full overflow-hidden"
+                value={progress}
+                max="100"
+              ></progress>
+            </div>
+          )}
+          <button
+            type="submit"
+            className="mx-auto block mb-4 w-[300px] px-4 mt-4
             py-3 bg-green-600 text-white font-bold text-sm
             uppercase rounded shadow-md hover:bg-green-700
             hover:shadow-lg focus:bg-slate-700 focus:shadow-lg
             active:bg-green-800 active:shadow-lg transition
             duration-150 ease-in-out text-center"
-        >
-          Editar
-        </button>
-      </form>
-    </main>
+          >
+            Editar
+          </button>
+        </form>
+      </main>
+      <Footer />
+    </>
   );
 }
