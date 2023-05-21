@@ -40,10 +40,10 @@ export default function Header() {
             </li>
 
             <li>
-              <a className="header-top-link">
+              <span className="header-top-link">
                 <ion-icon name="location-outline"></ion-icon>
                 <address>Liberia, Guanacaste</address>
-              </a>
+              </span>
             </li>
           </ul>
 
@@ -68,14 +68,9 @@ export default function Header() {
                   <ion-icon name="logo-instagram"></ion-icon>
                 </a>
               </li>
-              {/* <li>
-                <a className="header-top-social-link header-top-btn">
-                  Contacto 7139 4438 <AiFillPhone />
-                </a>
-              </li> */}
             </ul>
 
-            <a className="header-top-btn">Contacto 7139 4438</a>
+            <span className="header-top-btn">Contacto 7139 4438</span>
           </div>
         </div>
       </div>
@@ -84,13 +79,9 @@ export default function Header() {
           className="flex items-center text-left hover:scale-105"
           onClick={() => navigate("/")}
         >
-          {/* <img src="https://static.rdc.moveaws.com/images/logos/rdc-logo-default.svg" alt="logo" 
-            className="h-5 cursor-pointer"
-            onClick={()=>navigate("/")}
-            /> */}
-          {/* <BsFillHouseFill className="ml-1 text-red-500  w-6 h-5" /> */}
           <img
             src={logo}
+            alt="empresa"
             className="filter filter-red w-400 h-20 cursor-pointer"
           />
           <div className="coc">
