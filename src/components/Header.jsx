@@ -76,7 +76,7 @@ export default function Header() {
       </div>
       <header className="flex justify-between items-center px-0 max-w-6xl mx-auto">
         <div
-          className="flex items-center text-left hover:scale-105"
+          className="flex items-center text-left"
           onClick={() => navigate("/")}
         >
           <img
@@ -84,11 +84,9 @@ export default function Header() {
             alt="empresa"
             className="filter filter-red w-400 h-20 cursor-pointer"
           />
-          <div className="coc">
-            <h2 className="typewriter te hidden sm:block font-semibold text-xl cursor-pointer">
-              Vacation Rentals
-            </h2>
-          </div>
+          <h2 className="text-for hidden sm:block font-bold text-3xl cursor-pointer">
+            Vacation Rentals
+          </h2>
         </div>
         <div>
           <ul className="flex space-x-10 mr-4">

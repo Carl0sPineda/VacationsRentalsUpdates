@@ -1903,7 +1903,12 @@ a {
     padding-inline: 60px;
   }
 
-
+  .text-for{
+  font-family: "roboto";
+  background: linear-gradient(green,black);
+  background-clip: text;
+  color: transparent;
+ }
 
   /**
      * FOOTER
