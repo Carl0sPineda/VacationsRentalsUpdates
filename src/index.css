@@ -1904,7 +1904,7 @@ a {
   }
 
   .text-for{
-  font-family: "roboto";
+  font-family: serif;
   background: linear-gradient(green,black);
   background-clip: text;
   color: transparent;
