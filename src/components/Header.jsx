@@ -1,7 +1,6 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { AiFillPhone } from "react-icons/ai";
 import logo from "../assets/1.png";
 
 export default function Header() {
@@ -9,6 +8,8 @@ export default function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const auth = getAuth();
+  const isCategoryRoute = location.pathname.startsWith("/category");
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -82,7 +83,7 @@ export default function Header() {
           <img
             src={logo}
             alt="empresa"
-            className="filter filter-red w-400 h-20 cursor-pointer"
+            className="filter filter-red w-[76px] h-[80px] cursor-pointer"
           />
           <h2 className="text-for hidden sm:block font-bold text-3xl cursor-pointer">
             Vacation Rentals
@@ -102,7 +103,7 @@ export default function Header() {
               className={`cursor-pointer py-3 text-base font-semibold
                  text-gray-400 border-b-[3px]  border-b-transparent hover:scale-105
                  ${
-                   pathMathRoute("/properties") &&
+                   (pathMathRoute("/properties") || isCategoryRoute) &&
                    "text-black border-b-[#078169]"
                  }`}
               onClick={() => navigate("/properties")}
@@ -113,7 +114,10 @@ export default function Header() {
               className={`cursor-pointer py-3 text-base font-semibold
                  text-gray-400 border-b-[3px] border-b-transparent hover:scale-105
                  ${
-                   (pathMathRoute("/sign-in") || pathMathRoute("/profile")) &&
+                   (pathMathRoute("/sign-in") ||
+                     pathMathRoute("/profile") ||
+                     pathMathRoute("/sign-up") ||
+                     pathMathRoute("/forgot-password")) &&
                    "text-black border-b-[#078169]"
                  }`}
               onClick={() => navigate("/profile")}
