@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import OAuth from "../components/OAuth";
+import Footer from "../components/Footer";
 
 export default function forgotPassword() {
   const [email, setEmail] = useState("");
@@ -31,7 +32,7 @@ export default function forgotPassword() {
       >
         <div className="md:w-[67%] lg:w-[50%] mb-12 md:mb-6">
           <img
-            src="https://images.unsplash.com/photo-1599842079323-663d060a0f99?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MzV8fGNvc3RhJTIwcmljYSUyMGxvZ2lufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
+            src="https://images.unsplash.com/photo-1517840901100-8179e982acb7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80"
             alt="key"
             className="w-full rounded-2xl"
           />
@@ -91,6 +92,7 @@ export default function forgotPassword() {
           </form>
         </div>
       </div>
+      <Footer />
     </section>
   );
 }
