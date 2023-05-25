@@ -13,6 +13,7 @@ import CreateListing from "./pages/CreateListing";
 import EditListing from "./pages/EditListing";
 import Listing from "./pages/Listing";
 import Category from "./pages/Category";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
           <Route path="/edit-listing" element={<PrivateRoute />}>
             <Route path="/edit-listing/:listingId" element={<EditListing />} />
           </Route>
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
       <ToastContainer
