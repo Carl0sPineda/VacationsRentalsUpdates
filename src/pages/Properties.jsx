@@ -12,6 +12,7 @@ import {
 import { db } from "../firebase";
 import Spinner from "../components/Spinner";
 import ListingItem from "../components/ListingItem";
+import Footer from "../components/Footer";
 
 export default function Properties() {
   const [listings, setListings] = useState(null);
@@ -242,97 +243,100 @@ export default function Properties() {
                   id={listing.id}
                   listing={listing.data}
                 />
-              )).length > 0 ? ( //verifica que existan propiedades con los filtros ingresados
-              <ul className="sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-                {listings
-                  .filter((listing) => {
-                    //Se filtra por el numero de habitacions, ubicacion, precio
+              )).length > 0 ? (
+              <>
+                <ul className="sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+                  {listings
+                    .filter((listing) => {
+                      //Se filtra por el numero de habitacions, ubicacion, precio
 
-                    if (
-                      cantBedrooms == 0 &&
-                      priceRange == 0 &&
-                      cantBathrooms == 0
-                    ) {
-                      //filtra unicamente por ubicacion
+                      if (
+                        cantBedrooms == 0 &&
+                        priceRange == 0 &&
+                        cantBathrooms == 0
+                      ) {
+                        //filtra unicamente por ubicacion
 
-                      return listing.data.address
-                        .toLowerCase()
-                        .includes(searchBar.toLowerCase());
-                    } else if (cantBedrooms == 0 && cantBathrooms == 0) {
-                      //filtra por precio o  ubicacion-precio
-                      return (
-                        parseInt(listing.data.regularPrice) <= priceRange &&
-                        listing.data.address
+                        return listing.data.address
                           .toLowerCase()
-                          .includes(searchBar.toLowerCase())
-                      );
-                    } else if (priceRange == 0 && cantBathrooms == 0) {
-                      //filtra por habitacion o ubicacion-habitacion
+                          .includes(searchBar.toLowerCase());
+                      } else if (cantBedrooms == 0 && cantBathrooms == 0) {
+                        //filtra por precio o  ubicacion-precio
+                        return (
+                          parseInt(listing.data.regularPrice) <= priceRange &&
+                          listing.data.address
+                            .toLowerCase()
+                            .includes(searchBar.toLowerCase())
+                        );
+                      } else if (priceRange == 0 && cantBathrooms == 0) {
+                        //filtra por habitacion o ubicacion-habitacion
 
-                      return (
-                        listing.data.address
-                          .toLowerCase()
-                          .includes(searchBar.toLowerCase()) &&
-                        listing.data.bedrooms == cantBedrooms
-                      );
-                    } else if (cantBedrooms == 0 && priceRange == 0) {
-                      //filtra por baños o ubicacion-baños
+                        return (
+                          listing.data.address
+                            .toLowerCase()
+                            .includes(searchBar.toLowerCase()) &&
+                          listing.data.bedrooms == cantBedrooms
+                        );
+                      } else if (cantBedrooms == 0 && priceRange == 0) {
+                        //filtra por baños o ubicacion-baños
 
-                      return (
-                        listing.data.bathroms == cantBathrooms &&
-                        listing.data.address
-                          .toLowerCase()
-                          .includes(searchBar.toLowerCase())
-                      );
-                    } else if (priceRange == 0) {
-                      //filtra por habitaciones-baños o ubicacion-habitaciones-baños
+                        return (
+                          listing.data.bathroms == cantBathrooms &&
+                          listing.data.address
+                            .toLowerCase()
+                            .includes(searchBar.toLowerCase())
+                        );
+                      } else if (priceRange == 0) {
+                        //filtra por habitaciones-baños o ubicacion-habitaciones-baños
 
-                      return (
-                        listing.data.bedrooms == cantBedrooms &&
-                        listing.data.bathroms == cantBathrooms &&
-                        listing.data.address
-                          .toLowerCase()
-                          .includes(searchBar.toLowerCase())
-                      );
-                    } else if (cantBathrooms == 0) {
-                      //filtra por habitacions-precios o ubicacion-habitaciones-precios
-                      return (
-                        listing.data.bedrooms == cantBedrooms &&
-                        parseInt(listing.data.regularPrice) <= priceRange &&
-                        listing.data.address
-                          .toLowerCase()
-                          .includes(searchBar.toLowerCase())
-                      );
-                    } else if (cantBedrooms == 0) {
-                      //filtrar por banos-precio o ubicacion-banos-precio
+                        return (
+                          listing.data.bedrooms == cantBedrooms &&
+                          listing.data.bathroms == cantBathrooms &&
+                          listing.data.address
+                            .toLowerCase()
+                            .includes(searchBar.toLowerCase())
+                        );
+                      } else if (cantBathrooms == 0) {
+                        //filtra por habitacions-precios o ubicacion-habitaciones-precios
+                        return (
+                          listing.data.bedrooms == cantBedrooms &&
+                          parseInt(listing.data.regularPrice) <= priceRange &&
+                          listing.data.address
+                            .toLowerCase()
+                            .includes(searchBar.toLowerCase())
+                        );
+                      } else if (cantBedrooms == 0) {
+                        //filtrar por banos-precio o ubicacion-banos-precio
 
-                      return (
-                        listing.data.bathroms == cantBathrooms &&
-                        parseInt(listing.data.regularPrice) <= priceRange &&
-                        listing.data.address
-                          .toLowerCase()
-                          .includes(searchBar.toLowerCase())
-                      );
-                    } else {
-                      //filtra por todas las categorias
-                      return (
-                        listing.data.address
-                          .toLowerCase()
-                          .includes(searchBar.toLowerCase()) &&
-                        cantBedrooms == listing.data.bedrooms &&
-                        parseInt(listing.data.regularPrice) <= priceRange &&
-                        listing.data.bathroms == cantBathrooms
-                      );
-                    }
-                  })
-                  .map((listing) => (
-                    <ListingItem
-                      key={listing.id}
-                      id={listing.id}
-                      listing={listing.data}
-                    />
-                  ))}
-              </ul>
+                        return (
+                          listing.data.bathroms == cantBathrooms &&
+                          parseInt(listing.data.regularPrice) <= priceRange &&
+                          listing.data.address
+                            .toLowerCase()
+                            .includes(searchBar.toLowerCase())
+                        );
+                      } else {
+                        //filtra por todas las categorias
+                        return (
+                          listing.data.address
+                            .toLowerCase()
+                            .includes(searchBar.toLowerCase()) &&
+                          cantBedrooms == listing.data.bedrooms &&
+                          parseInt(listing.data.regularPrice) <= priceRange &&
+                          listing.data.bathroms == cantBathrooms
+                        );
+                      }
+                    })
+                    .map((listing) => (
+                      <ListingItem
+                        key={listing.id}
+                        id={listing.id}
+                        listing={listing.data}
+                      />
+                    ))}
+                </ul>
+                <Footer />
+              </>
             ) : (
               <p className="text-center mt-2  mb-2">
                 No hay propiedades disponibles con las caracteristicas
