@@ -247,13 +247,13 @@ a {
   z-index: 1;
 }
 
-.btn:is(:hover, :focus) {
-  background: var(--black);
+.btn:is(:hover) {
+  background: var(--white);
   color: var(--dark-jungle-green);
   border-color: var(--black);
 }
 
-.btn::before {
+/* .btn::before {
   content: "";
   position: absolute;
   top: 0;
@@ -263,7 +263,7 @@ a {
   background: var(--white);
   transition: var(--transition);
   z-index: -1;
-}
+} */
 
 .btn:is(:hover, :focus)::before {
   width: 100%;
@@ -1289,7 +1289,7 @@ a {
 }
 
 .copyright {
-  font-size: 1rem;
+  font-size: 0.75rem;
   text-align: center;
 }
 
