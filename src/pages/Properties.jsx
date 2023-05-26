@@ -1,32 +1,20 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import {
-  collection,
-  getDocs,
-  limit,
-  orderBy,
-  query,
-  startAfter,
-  where,
-} from "firebase/firestore";
+import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { db } from "../firebase";
 import Spinner from "../components/Spinner";
 import ListingItem from "../components/ListingItem";
 import Footer from "../components/Footer";
+import Aos from "aos";
+import "aos/dist/aos.css";
 
 export default function Properties() {
   const [listings, setListings] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [lastFetchedListing, setLastFetchListing] = useState(null);
   const [searchBar, setSearchBar] = useState(" ");
   const [cantBedrooms, setCantBendrooms] = useState(0);
   const [cantBathrooms, setCantBathdrooms] = useState(0);
   const [priceRange, setPriceRange] = useState(0);
-  const [width, setWidth] = useState(0);
-  const inputBed = useRef(null);
-  const inputBath = useRef(null);
-  const inputPrice = useRef(null);
-  const inputSearch = useRef(null);
 
   useEffect(() => {
     async function fetchListings() {
@@ -58,12 +46,20 @@ export default function Properties() {
     fetchListings();
   }, []);
 
+  useEffect(() => {
+    Aos.init({ duration: 2000 });
+  }, []);
+
   if (loading) {
     return <Spinner />;
   }
 
   return (
-    <div className="sm:mr-3 sm:ml-5 pt-4 space-y-6 mt-8">
+    <div
+      className="sm:mr-3 sm:ml-5 pt-4 space-y-6 mt-8"
+      data-aos="fade-right"
+      data-aos-easing="linear"
+    >
       <div className="flex md:flex-row space-y-10 md:space-y-0 md:space-x-10 justify-center sm: flex-col ml-6 mb-6">
         <div>
           <label className="text-lg text-center mt-6 font-bold mb-2 mr-4 sm:mb-10">

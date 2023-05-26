@@ -14,6 +14,8 @@ import ejmcasa from "../assets/ejmcasa.jpg";
 import Swal from "sweetalert2";
 import Spinner from "../components/Spinner";
 import Footer from "../components/Footer";
+import Aos from "aos";
+import "aos/dist/aos.css";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -51,6 +53,10 @@ export default function Home() {
     fetchListings();
   }, []);
 
+  useEffect(() => {
+    Aos.init({ duration: 1500 });
+  }, []);
+
   const handleClick = () => {
     Swal.fire({
       title: "<h2 class='text-slate-900 text-2xl'>Misión</h2>",
@@ -73,7 +79,7 @@ export default function Home() {
       {rentListings && rentListings.length > 0 && (
         <main>
           <section className="hero" id="home">
-            <div className="container">
+            <div className="container" data-aos="fade-left">
               <div className="hero-content">
                 <p className="hero-subtitle">
                   <ion-icon name="home"></ion-icon>
@@ -96,12 +102,21 @@ export default function Home() {
               </div>
 
               <figure className="hero-banner">
-                <img src={ejmcasa} alt="Modern house model" className="w-100" />
+                <img
+                  src={ejmcasa}
+                  alt="Modern house model"
+                  className="w-100"
+                  data-aos="fade-left"
+                />
               </figure>
             </div>
           </section>
           <section className="property" id="property">
-            <div className="container">
+            <div
+              className="container"
+              data-aos="fade-right"
+              data-aos-easing="linear"
+            >
               <p className="section-subtitle">Propiedades</p>
               <h2 className="h2 section-title">Agregadas reciente</h2>
 
@@ -118,7 +133,7 @@ export default function Home() {
           </section>
 
           <section className="service" id="service">
-            <div className="container">
+            <div className="container" data-aos="fade-up">
               <p className="section-subtitle">Nuestros Servicios</p>
 
               <h2 className="h2 section-title">Enfoque Principal</h2>
@@ -158,7 +173,7 @@ export default function Home() {
             </div>
           </section>
           <section className="features">
-            <div className="container">
+            <div className="container" data-aos="fade-up">
               <p className="section-subtitle">Ofrecemos</p>
 
               <h2 className="h2 section-title">Servicios De Las Propiedades</h2>
