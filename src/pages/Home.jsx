@@ -54,7 +54,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    Aos.init({ duration: 1500 });
+    Aos.init({ duration: 1500, disable: window.innerWidth < 768 });
   }, []);
 
   const handleClick = () => {

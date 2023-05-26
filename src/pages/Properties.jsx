@@ -47,7 +47,10 @@ export default function Properties() {
   }, []);
 
   useEffect(() => {
-    Aos.init({ duration: 2000 });
+    Aos.init({
+      duration: 1500,
+      disable: window.innerWidth < 768,
+    });
   }, []);
 
   if (loading) {
