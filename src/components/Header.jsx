@@ -80,11 +80,7 @@ export default function Header() {
           className="flex items-center text-left"
           onClick={() => navigate("/")}
         >
-          <img
-            src={logo}
-            alt="empresa"
-            className="filter filter-red w-[76px] h-[80px] cursor-pointer"
-          />
+          <img src={logo} alt="empresa" className="h-20 cursor-pointer" />
           <h2 className="text-for hidden sm:block font-bold text-3xl cursor-pointer">
             Vacation Rentals
           </h2>
