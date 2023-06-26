@@ -1445,6 +1445,7 @@ a {
 
   .header-top {
     padding-block: 5px;
+    height: 50px;
   }
 
   .header-top .wrapper {
@@ -1632,6 +1633,7 @@ a {
   .header-top-list,
   .header-top .wrapper {
     gap: 30px;
+    margin-top: 7px;
   }
 
 
