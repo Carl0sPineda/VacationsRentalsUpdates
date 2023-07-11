@@ -6,7 +6,7 @@ to the properties.Using firebase and its services as a NoSQL firestore, storage 
 images and rules. Design with React, CSS and Tailwind CSS
 
 ## Installation
-`Add .env` file and fill in the credentials with your firebase project.
+`Add .env` file and fill in the credentials with your firebase project and email js.
 
 
 Install my-project with npm
