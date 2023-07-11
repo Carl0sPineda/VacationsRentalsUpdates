@@ -1,8 +1,13 @@
 # 🏠 VacationsRentalsUpdates
 
-Custom ionic components
+Property reservation with filters, logins through google or facebook, interactive maps
+so that an admin can add an exact location, email js, possibility of adding likes and reviews
+to the properties.Using firebase and its services as a NoSQL firestore, storage to store the
+images and rules. Design with React, CSS and Tailwind CSS
 
 ## Installation
+`Add .env` file and fill in the credentials with your firebase project.
+
 
 Install my-project with npm
 
