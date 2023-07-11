@@ -19,7 +19,8 @@ Install my-project with npm
     
 ## Demo
 
-![g](https://github.com/Carl0sPineda/VacationsRentalsUpdates/assets/100396203/1fb869ab-b0ec-4bb3-8242-99abaae971ff)
+![g](https://github.com/Carl0sPineda/VacationsRentalsUpdates/assets/100396203/36e76c90-cd7d-45be-8b07-990c008b5ae4)
 
-![p](https://github.com/Carl0sPineda/VacationsRentalsUpdates/assets/100396203/76bdab5b-b9a5-4aa4-b81c-0381b3b566d5)
+
+![p](https://github.com/Carl0sPineda/VacationsRentalsUpdates/assets/100396203/19dd3865-04eb-48c4-888c-0a3490c127de)
 
